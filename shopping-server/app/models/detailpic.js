@@ -1,7 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const DetailPic = sequelize.define('DetailPic', {
-    id: DataTypes.INTEGER,
     productId: DataTypes.INTEGER,
     picAddress: DataTypes.STRING
   }, {});
