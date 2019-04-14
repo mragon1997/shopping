@@ -21,8 +21,8 @@ module.exports = {
           colorId: 1,
           productNum: 1,
           address: '四川省攀枝花市东沟县洗澡堂子大街048号',
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         },
         {
           userId: 3,
@@ -30,8 +30,8 @@ module.exports = {
           colorId: 2,
           productNum: 2,
           address: '四川省攀枝花市东沟县洗澡堂子大街048号',
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         },
         {
           userId: 3,
@@ -39,8 +39,8 @@ module.exports = {
           colorId: 3,
           productNum: 10,
           address: '四川省攀枝花市东沟县洗澡堂子大街048号',
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         }
       ],
       {}

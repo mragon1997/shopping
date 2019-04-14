@@ -19,22 +19,22 @@ module.exports = {
           tel: '18888888888',
           password: 'admin8888',
           roleId: '1',
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         },
         {
           tel: '16666666666',
           password: 'operate6666',
           roleId: '2',
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         },
         {
           tel: '14444444444',
           password: 'loser4444',
           roleId: '3',
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         }
       ],
       {}

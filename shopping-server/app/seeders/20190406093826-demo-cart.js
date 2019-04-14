@@ -20,24 +20,24 @@ module.exports = {
           productId: 1,
           colorId: 1,
           productNum: 1,
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         },
         {
           userId: 3,
           productId: 1,
           colorId: 2,
           productNum: 2,
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         },
         {
           userId: 3,
           productId: 1,
           colorId: 3,
           productNum: 10,
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         }
       ],
       {}

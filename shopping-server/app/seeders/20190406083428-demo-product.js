@@ -24,8 +24,8 @@ module.exports = {
           isAct: true,
           mainPic:
             'https://img10.360buyimg.com/n7/jfs/t1/3405/18/3537/69901/5b997c0aE5dc8ed9f/a2c208410ae84d1f.jpg',
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         },
         {
           name:
@@ -36,8 +36,8 @@ module.exports = {
           isAct: true,
           mainPic:
             'https://img13.360buyimg.com/n7/jfs/t21631/84/2298558907/306845/1e75dd0c/5b4ee806N5fdcb463.jpg',
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         },
         {
           name:
@@ -48,8 +48,8 @@ module.exports = {
           isAct: true,
           mainPic:
             'https://img12.360buyimg.com/n7/jfs/t18496/191/1094234567/72578/837eeaaa/5abb0fe7N5f2b7ed2.jpg',
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         },
         {
           name: 'Apple AirPods 蓝牙无线耳机',
@@ -59,8 +59,8 @@ module.exports = {
           isAct: true,
           mainPic:
             'https://img10.360buyimg.com/n7/jfs/t3871/193/501637202/67656/c6725c75/58534587N53c62548.jpg',
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         }
       ],
       {}

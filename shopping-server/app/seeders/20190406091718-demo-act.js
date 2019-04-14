@@ -19,22 +19,22 @@ module.exports = {
           actName: '电子产品二月促销',
           beginTime: new Date('2019-2-3'),
           endTime: new Date('2019-2-4'),
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         },
         {
           actName: '苹果夏季降价活动',
           beginTime: new Date('2019-4-1'),
           endTime: new Date('2019-8-31'),
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         },
         {
           actName: '秋季清仓挥泪大甩卖',
           beginTime: new Date('2019-10-15'),
           endTime: new Date('2019-11-15'),
-          createdAt: new Date(),
-          updatedAt: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         }
       ],
       {}
