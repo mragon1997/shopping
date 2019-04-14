@@ -33,6 +33,15 @@ module.exports = appInfo => {
     password: '970428'
   }
 
+  config.security =  {
+    xframe: {
+      enable: false,
+    },
+    csrf: {
+      enable: false
+    }
+  }
+
   return {
     ...config,
     ...userConfig

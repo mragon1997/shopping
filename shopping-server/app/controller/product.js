@@ -11,19 +11,105 @@ const fo = {
 }
 
 class ProductController extends Controller {
+  // 查询全部商品
   async index() {
     const ctx = this.ctx
+    const productList = await ctx.service.product.index()
+    if(productList) {
+      ctx.body = {
+        ...so,
+        data: productList
+      }
+    }else {
+      ctx.body = {
+        ...fo
+      }
+    }
+    ctx.status = 200
+  }
 
-    // const productList = await ctx.service.product.index()
+  // 查询单个商品
+  async show() {
+    const ctx = this.ctx
+    const product = await ctx.service.product.show(ctx.params.id)
+    if(product) {
+      ctx.body = {
+        ...so,
+        data: product
+      }
+    }else {
+      ctx.body = {
+        ...fo
+      }
+    }
+    ctx.status = 200
+  }
 
-    console.log('对象模型数组：', this.ctx.model.Act)
-    const productList = await this.ctx.model.Act.findAll()
-
-    ctx.body = {
-      ...so,
-      data: productList
+  // 创建一个商品
+  async create() {
+    const ctx = this.ctx
+    const result = await ctx.service.product.create(ctx.request.body)
+    if(result) {
+      ctx.body = {
+        ...so,
+        data: result
+      }
+    }else {
+      ctx.body = {
+        ...fo
+      }
     }
 
+    ctx.status = 200
+  }
+
+  // 更新商品状态
+  async update() {
+    const ctx = this.ctx
+    const id = ctx.params.id
+    const product = await ctx.service.product.show(id)
+    if(!product) {
+      ctx.body = {
+        ...fo,
+        message: '查无此商品'
+      }
+    }else {
+      const result = await ctx.service.product.update(id, ctx.request.body)
+      if(result){
+        ctx.body = {
+          ...so
+        }
+      }else {
+        ctx.body = {
+          ...fo
+        }
+      }
+    }
+    ctx.status = 200
+  }
+
+  // 删除一条商品
+  async destroy() {
+    const ctx = this.ctx
+    const id = ctx.params.id
+    const product = await ctx.service.product.show(id)
+    if(!product) {
+      ctx.body = {
+        ...fo,
+        message: '查无此商品'
+      }
+    }else {
+      const result = await ctx.service.product.destroy(id)
+      if(result) {
+        ctx.body = {
+          ...so
+        }
+      }else {
+        ctx.body = {
+          ...fo
+        }
+      }
+    }
     ctx.status = 200
   }
 }
