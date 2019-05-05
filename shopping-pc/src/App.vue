@@ -8,10 +8,9 @@
           router
         >
           <el-menu-item index="/">首页</el-menu-item>
-          <el-menu-item index="about">商品列表</el-menu-item>
-          <el-menu-item index="cart">购物车</el-menu-item>
-          <el-menu-item index="order">订单</el-menu-item>
-          <el-menu-item index="detail">商详</el-menu-item>
+          <el-menu-item index="/about">商品列表</el-menu-item>
+          <el-menu-item index="/cart">购物车</el-menu-item>
+          <el-menu-item index="/order">订单</el-menu-item>
         </el-menu>
       </el-header>
       <el-main class="main-content">

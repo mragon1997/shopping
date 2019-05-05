@@ -6,6 +6,10 @@ class DetailpicService extends Service {
     const list = await this.ctx.model.Detailpic.findAll()
     return list
   }
+  async listById(productId) {
+    const list = await this.ctx.model.Detailpic.findAll({where:{productId: productId}})
+    return list
+  }
 
   async show(id) {
     const detailpic = await this.ctx.model.Detailpic.findById(id)

@@ -32,15 +32,11 @@ class ProductController extends Controller {
   async show() {
     const ctx = this.ctx
     const product = await ctx.service.product.show(ctx.params.id)
-    if(product) {
-      ctx.body = {
-        ...so,
-        data: product
-      }
-    }else {
-      ctx.body = {
-        ...fo
-      }
+    const picList = await ctx.service.detailpic.listById(ctx.params.id)
+    product.dataValues.picList = picList
+    ctx.body = {
+      ...so,
+      data: product
     }
     ctx.status = 200
   }

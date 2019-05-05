@@ -1,5 +1,5 @@
 <template>
-  <div class="product-card">
+  <div class="product-card" @click="goToDetail">
     <el-card :body-style="{ padding: '0px' }">
       <div :style="{background:picBack}" class="image"></div>
       <div style="padding: 14px;">
@@ -25,7 +25,21 @@ export default {
     picBack() {
       return `url(${this.mainPic}) center center no-repeat`;
     }
-  }
+  },
+  methods: {
+    /**
+     * 去往商详页
+     */
+    goToDetail() {
+      console.log('点击了去往商详页', this.productId)
+      this.$router.push({
+        name: 'detail',
+        params: {
+          productId: this.productId
+        }
+      })
+    }
+  } 
 };
 </script>
 

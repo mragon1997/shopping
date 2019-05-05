@@ -4,15 +4,15 @@
     <div class="detail-info">
       <div class="info-left">
         <img
-          src="https://img10.360buyimg.com/n7/jfs/t1/3405/18/3537/69901/5b997c0aE5dc8ed9f/a2c208410ae84d1f.jpg"
+          :src="product.mainPic"
           alt
         >
       </div>
       <div class="info-right">
-        <div class="detail-name">Apple iPhone XR (A2108) 128GB 移动联通电信4G手机 双卡双待机</div>
+        <div class="detail-name">{{product.name}}</div>
         <div class="detail-label">
           <div class="detail-brand">苹果</div>
-          <div class="detail-price">1999</div>
+          <div class="detail-price">{{product.price}}</div>
         </div>
         <div class="detail-operate">
           <div class="operate-num">
@@ -31,9 +31,12 @@
 
     <!-- 商品详情图 -->
     <div class="detail-pic-list">
-        <div class="detail-pic-item">
-            <img src="https://img14.360buyimg.com/cms/jfs/t1/10243/28/13159/434204/5c7f77e1E77b34286/7da561e321879d1e.jpg" alt="">
-        </div>
+      <div class="detail-pic-item" v-for="pic in product.picList" :key="pic.id">
+        <img
+          :src="pic.picAddress"
+          alt
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -45,12 +48,36 @@ export default {
     ProductCard
   },
   data() {
-    return {};
+    return {
+      productId: "", // 商品id
+      product: {} // 商品详情数据
+    };
   },
   mounted() {
     console.log("挂载Detail组件");
+    console.log("路由参数：", this.$route);
+
+    // 从路由参数中获取商品Id
+    this.productId = this.$route.params.productId;
+
+    // 获取商品详情
+    this.getProductDetail()
   },
-  methods: {}
+  methods: {
+    /**
+     * 获取商品详情
+     */
+    getProductDetail() {
+      let productId = this.productId || this.$route.params.productId;
+      console.log("获取商品详情", productId);
+      this.axios
+        .get(`http://127.0.0.1:7001/api/product/${productId}`)
+        .then(res => {
+          console.log("获取商品详情返回参数", res);
+            this.product = res.data.data
+        });
+    }
+  }
 };
 </script>
 
@@ -122,14 +149,14 @@ export default {
   box-sizing: border-box;
 }
 .operate-num {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  width: 100%;
 }
-.product-num{
-    margin: 0 50px;
+.product-num {
+  margin: 0 50px;
 }
 
 .operate-btn {
@@ -139,15 +166,15 @@ export default {
   flex: 1;
   width: 100%;
 }
-.detail-pic-list{
-    margin-top: 100px;
-    width: 100%;
+.detail-pic-list {
+  margin-top: 100px;
+  width: 100%;
 }
 .detail-pic-item {
-    width: 100%;
+  width: 100%;
 }
 .detail-pic-item img {
-    width: 100%;
+  width: 100%;
 }
 </style>
 
