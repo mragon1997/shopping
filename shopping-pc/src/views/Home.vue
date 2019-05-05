@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-
     <!-- 幻灯片 -->
     <el-carousel height="400px">
       <el-carousel-item v-for="item in swipers" :key="item">
@@ -8,7 +7,6 @@
       </el-carousel-item>
     </el-carousel>
     <!-- 幻灯片结束 -->
-
 
     <!-- 平台介绍 -->
     <div class="main-label">
@@ -34,50 +32,22 @@
 
 
     <!-- 活动楼层 -->
-    <div class="main-label">
+    <div class="main-label" v-for="act in actList" :key="act.id">
       <div class="label-title">
-        <span>活动标题</span>
+        <span>{{act.actName}}</span>
       </div>
       <div class="label-block">
-        <div class="label-item">
+        <div class="label-item" v-for="product in act.productList" :key="product.id">
           <ProductCard
-            productId="1"
-            mainPic="https://p.ssl.qhimg.com/dmfd/400_300_/t013323f4d5bb2e1f26.jpg"
-            name="日本正品DUP EX552 假睫毛胶水透明睫毛胶粘度好温和低敏不开胶sdasdasd"
-            price="299.00"
-          ></ProductCard>
-        </div>
-        <div class="label-item">
-          <ProductCard
-            productId="1"
-            mainPic="https://p.ssl.qhimg.com/dmfd/400_300_/t013323f4d5bb2e1f26.jpg"
-            name="日本正品DUP EX552 假睫毛胶水透明睫毛胶粘度好温和低敏不开胶sdasdasd"
-            price="299.00"
-          ></ProductCard>
-        </div>
-        <div class="label-item">
-          <ProductCard
-            productId="1"
-            mainPic="https://p.ssl.qhimg.com/dmfd/400_300_/t013323f4d5bb2e1f26.jpg"
-            name="日本正品DUP EX552 假睫毛胶水透明睫毛胶粘度好温和低敏不开胶sdasdasd"
-            price="299.00"
-          ></ProductCard>
-        </div>
-        <div class="label-item">
-          <ProductCard
-            productId="1"
-            mainPic="https://p.ssl.qhimg.com/dmfd/400_300_/t013323f4d5bb2e1f26.jpg"
-            name="日本正品DUP EX552 假睫毛胶水透明睫毛胶粘度好温和低敏不开胶sdasdasd"
-            price="299.00"
+            :productId="product.detail.id"
+            :mainPic="product.detail.mainPic"
+            :name="product.detail.name"
+            :price="product.detail.price"
           ></ProductCard>
         </div>
       </div>
     </div>
     <!-- 活动楼层结束 -->
-
-
- 
-
   </div>
 </template>
 
@@ -94,13 +64,33 @@ export default {
   },
   data() {
     return {
+      // 幻灯片用图
       swipers: [
         "http://iph.href.lu/879x200?text=1",
         "http://iph.href.lu/879x200?text=2",
         "http://iph.href.lu/879x200?text=3",
         "http://iph.href.lu/879x200?text=4"
-      ]
+      ],
+      actList: [] // 活动列表
     };
+  },
+  mounted() {
+    console.log("挂载主页组件");
+    
+    // 获取活动列表
+    this.getActList()
+  },
+  methods: {
+    /**
+     * 获取活动列表
+     */
+    getActList() {
+      console.log("获取活动列表");
+      this.axios.get("http://127.0.0.1:7001/api/act").then(res => {
+        console.log("获取活动列表返回参数:", res);
+        this.actList = res.data.data;
+      });
+    }
   }
 };
 </script>
@@ -139,6 +129,5 @@ export default {
 .label-item .item-img {
   margin: 50px auto;
 }
-
 </style>
 

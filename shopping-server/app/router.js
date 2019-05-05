@@ -7,6 +7,7 @@ module.exports = app => {
   const { router, controller } = app
   router.get('/', controller.home.index)
 
+  // restful
   router.resources('products', '/api/product', app.controller.product)
   router.resources('detailpics', '/api/detailpic', app.controller.detailpic)
   router.resources('acts', '/api/act', app.controller.act)

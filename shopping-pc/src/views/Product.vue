@@ -5,81 +5,26 @@
       <div class="category-row">
         <div class="row-left">品牌</div>
         <div class="row-right">
-          <div class="category-item">苹果</div>
-          <div class="category-item">小米</div>
-          <div class="category-item">华为</div>
-          <div class="category-item">oppo</div>
-          <div class="category-item">努比亚</div>
+          <div class="category-item" v-for="brand in brandList" :key="brand.id">{{brand.brandName}}</div>
         </div>
       </div>
-      <div class="category-row">
+      <!-- <div class="category-row">
         <div class="row-left">颜色</div>
         <div class="row-right">
-          <div class="category-item">黑色</div>
-          <div class="category-item">白色</div>
-          <div class="category-item">蓝色</div>
-          <div class="category-item">黄色</div>
+          <div class="category-item" v-for="color in colorList" :key="color.id">{{color.colorName}}</div>
         </div>
-      </div>
+      </div> -->
     </div>
     <!-- 商品类目结束 -->
 
     <!-- 商品列表 -->
     <div class="product-list">
-      <div class="product-item">
+      <div class="product-item" v-for="product in productList" :key="product.id">
         <ProductCard
-          productId="1"
-          mainPic="https://p.ssl.qhimg.com/dmfd/400_300_/t013323f4d5bb2e1f26.jpg"
-          name="日本正品DUP EX552 假睫毛胶水透明睫毛胶粘度好温和低敏不开胶sdasdasd"
-          price="299.00"
-        ></ProductCard>
-      </div>
-      <div class="product-item">
-        <ProductCard
-          productId="1"
-          mainPic="https://p.ssl.qhimg.com/dmfd/400_300_/t013323f4d5bb2e1f26.jpg"
-          name="日本正品DUP EX552 假睫毛胶水透明睫毛胶粘度好温和低敏不开胶sdasdasd"
-          price="299.00"
-        ></ProductCard>
-      </div>
-      <div class="product-item">
-        <ProductCard
-          productId="1"
-          mainPic="https://p.ssl.qhimg.com/dmfd/400_300_/t013323f4d5bb2e1f26.jpg"
-          name="日本正品DUP EX552 假睫毛胶水透明睫毛胶粘度好温和低敏不开胶sdasdasd"
-          price="299.00"
-        ></ProductCard>
-      </div>
-      <div class="product-item">
-        <ProductCard
-          productId="1"
-          mainPic="https://p.ssl.qhimg.com/dmfd/400_300_/t013323f4d5bb2e1f26.jpg"
-          name="日本正品DUP EX552 假睫毛胶水透明睫毛胶粘度好温和低敏不开胶sdasdasd"
-          price="299.00"
-        ></ProductCard>
-      </div>
-      <div class="product-item">
-        <ProductCard
-          productId="1"
-          mainPic="https://p.ssl.qhimg.com/dmfd/400_300_/t013323f4d5bb2e1f26.jpg"
-          name="日本正品DUP EX552 假睫毛胶水透明睫毛胶粘度好温和低敏不开胶sdasdasd"
-          price="299.00"
-        ></ProductCard>
-      </div>
-      <div class="product-item">
-        <ProductCard
-          productId="1"
-          mainPic="https://p.ssl.qhimg.com/dmfd/400_300_/t013323f4d5bb2e1f26.jpg"
-          name="日本正品DUP EX552 假睫毛胶水透明睫毛胶粘度好温和低敏不开胶sdasdasd"
-          price="299.00"
-        ></ProductCard>
-      </div>
-      <div class="product-item">
-        <ProductCard
-          productId="1"
-          mainPic="https://p.ssl.qhimg.com/dmfd/400_300_/t013323f4d5bb2e1f26.jpg"
-          name="日本正品DUP EX552 假睫毛胶水透明睫毛胶粘度好温和低敏不开胶sdasdasd"
-          price="299.00"
+          :productId="product.id"
+          :mainPic="product.mainPic"
+          :name="product.name"
+          :price="product.price"
         ></ProductCard>
       </div>
     </div>
@@ -94,7 +39,55 @@ export default {
     ProductCard
   },
   data() {
-    return {};
+    return {
+      productList: [], // 商品列表
+      brandList: [], // 品牌列表
+      colorList: [] // 颜色列表
+    };
+  },
+  mounted() {
+    console.log("挂载Poduct组件");
+
+    // 获取商品列表
+    this.getProductList();
+    
+    // 获取品牌列表
+    this.getBrandList();
+
+    // 获取颜色列表
+    this.getColorList();
+  },
+  methods: {
+    /**
+     * 获取商品列表
+     */
+    getProductList() {
+      console.log("获取商品列表");
+      this.axios.get("http://127.0.0.1:7001/api/product").then(res => {
+        console.log("获取商品列表返回参数:", res);
+        this.productList = res.data.data;
+      });
+    },
+    /**
+     * 获取品牌列表
+     */
+    getBrandList() {
+      console.log("获取品牌列表")
+      this.axios.get("http://127.0.0.1:7001/api/brand").then(res => {
+        console.log("获取品牌列表返回参数", res)
+        this.brandList = res.data.data
+      })
+    },
+    /**
+     * 获取颜色列表
+     */
+    getColorList() {
+      console.log('获取颜色列表')
+      this.axios.get("http://127.0.0.1:7001/api/color").then(res => {
+        console.log("获取颜色列表返回参数", res)
+        this.colorList = res.data.data
+      })
+    }
   }
 };
 </script>
@@ -138,7 +131,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
-.product-item{
+.product-item {
   margin-bottom: 30px;
 }
 </style>

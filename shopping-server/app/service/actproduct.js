@@ -7,6 +7,11 @@ class ActProductService extends Service {
     return list
   }
 
+  async listById(actId) {
+    const list = await this.ctx.model.Actproduct.findAll({where:{actId: actId}})
+    return list
+  }
+
   async show(id) {
     const ActProduct = await this.ctx.model.Actproduct.findById(id)
     return ActProduct

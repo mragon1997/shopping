@@ -15,32 +15,37 @@ class ActController extends Controller {
   async index() {
     const ctx = this.ctx
     const actList = await ctx.service.act.index()
-    if(actList) {
-      ctx.body = {
-        ...so,
-        data: actList
-      }
-    }else {
-      ctx.body = {
-        ...fo
-      }
+
+    await Promise.all(actList.map(async act => {
+      act.dataValues.productList = await ctx.service.actproduct.listById(act.dataValues.id)
+      await Promise.all(act.dataValues.productList.map(async product => {
+        product.dataValues.detail = await ctx.service.product.show(product.dataValues.productId)
+      }))
+    }))
+
+    ctx.body = {
+      ...so,
+      data: actList
     }
     ctx.status = 200
+
   }
 
-  // 查询单个商品
+  // 查询单个活动
   async show() {
-    const ctx = this.ctx
-    const act = await ctx.service.act.show(ctx.params.id)
-    if(act) {
-      ctx.body = {
-        ...so,
-        data: act
-      }
-    }else {
-      ctx.body = {
-        ...fo
-      }
+    const ctx= this.ctx
+    const id = ctx.params.id
+
+    const act = await ctx.service.act.show(id)
+    act.dataValues.productList = await ctx.service.actproduct.listById(id)
+
+    await Promise.all(act.dataValues.productList.map(async product => {
+      product.dataValues.detail = await ctx.service.product.show(product.dataValues.productId)
+    }))
+
+    ctx.body = {
+      ...so,
+      data: act
     }
     ctx.status = 200
   }
@@ -112,6 +117,7 @@ class ActController extends Controller {
     }
     ctx.status = 200
   }
+
 }
 
 module.exports = ActController
