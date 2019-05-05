@@ -11,6 +11,7 @@
           <el-menu-item index="about">商品列表</el-menu-item>
           <el-menu-item index="cart">购物车</el-menu-item>
           <el-menu-item index="order">订单</el-menu-item>
+          <el-menu-item index="detail">商详</el-menu-item>
         </el-menu>
       </el-header>
       <el-main class="main-content">
@@ -46,6 +47,7 @@ html,body{
   height: 100%;
 }
 .main-content {
+  margin-top: 80px;
   padding: 0 200px 0px 200px;
   overflow: visible;
 }

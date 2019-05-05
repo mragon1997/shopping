@@ -95,7 +95,6 @@ export default {
 
 <style scoped>
 .product {
-  padding: 80px 0;
 }
 .product-category {
   width: 100%;
