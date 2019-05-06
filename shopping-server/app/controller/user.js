@@ -45,6 +45,27 @@ class UserController extends Controller {
     ctx.status = 200
   }
 
+  async login() {
+    const ctx = this.ctx
+    const {tel, password} = ctx.request.body
+    const user = await ctx.service.user.findByTel(tel)
+    if(user[0] && user[0].dataValues.password == password){
+      ctx.body = {
+        ...so,
+        data: user
+      }
+    }else {
+      ctx.body = {
+        ...fo,
+        message: '账号和密码不匹配'
+      }
+    }
+  
+    ctx.status = 200
+
+
+  }
+
   // 创建一个商品
   async create() {
     const ctx = this.ctx

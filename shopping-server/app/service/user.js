@@ -7,6 +7,11 @@ class UserService extends Service {
     return list
   }
 
+  async findByTel(tel) {
+    const user = await this.ctx.model.User.findAll({where: {tel: tel}})
+    return user
+  }
+
   async show(id) {
     const user = await this.ctx.model.User.findById(id)
     return user
