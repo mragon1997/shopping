@@ -56,11 +56,14 @@ export default {
   methods: {
     login() {
       console.log("用户登录", this.loginForm);
+      console.log("用户登录状态", this.$store.state.loginRole)
       this.axios
         .post(`http://127.0.0.1:7001/api/login`, this.loginForm)
         .then(res => {
           console.log("用户登录返回参数", res);
-          if (res.data.code === 0) {
+          if (res && res.data && res.data.code === 0 && res.data.data && res.data.data[0] && res.data.data[0].id) {
+            this.$store.dispatch('userLogin', {userId: res.data.data[0].id, roleId: res.data.data[0].roleId})
+            console.log("用户登录状态", this.$store.state.loginRole, this.$store.state.userId)
             this.$router.push({ name: "home" });
             this.$message({
               message: "登录成功！",
