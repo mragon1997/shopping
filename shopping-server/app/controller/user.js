@@ -15,12 +15,12 @@ class UserController extends Controller {
   async index() {
     const ctx = this.ctx
     const userList = await ctx.service.user.index()
-    if(userList) {
+    if (userList) {
       ctx.body = {
         ...so,
         data: userList
       }
-    }else {
+    } else {
       ctx.body = {
         ...fo
       }
@@ -32,12 +32,12 @@ class UserController extends Controller {
   async show() {
     const ctx = this.ctx
     const user = await ctx.service.user.show(ctx.params.id)
-    if(user) {
+    if (user) {
       ctx.body = {
         ...so,
         data: user
       }
-    }else {
+    } else {
       ctx.body = {
         ...fo
       }
@@ -47,39 +47,50 @@ class UserController extends Controller {
 
   async login() {
     const ctx = this.ctx
-    const {tel, password} = ctx.request.body
+    const { tel, password } = ctx.request.body
     const user = await ctx.service.user.findByTel(tel)
-    if(user[0] && user[0].dataValues.password == password){
+    if (user[0] && user[0].dataValues.password == password) {
       ctx.body = {
         ...so,
         data: user
       }
-    }else {
+    } else {
       ctx.body = {
         ...fo,
         message: '账号和密码不匹配'
       }
     }
-  
+
     ctx.status = 200
-
-
   }
+
+
 
   // 创建一个商品
   async create() {
     const ctx = this.ctx
-    const result = await ctx.service.user.create(ctx.request.body)
-    if(result) {
+    let { tel } = ctx.request.body
+    const user = await ctx.service.user.findByTel(tel)
+    if (user[0]) {
       ctx.body = {
-        ...so,
-        data: result
+        ...fo,
+        message: '用户已存在！'
       }
-    }else {
-      ctx.body = {
-        ...fo
+    } else {
+      const result = await ctx.service.user.create({ ...ctx.request.body, roleId: 3 })
+      if (result) {
+        ctx.body = {
+          ...so,
+          data: result
+        }
+      } else {
+        ctx.body = {
+          ...fo
+        }
       }
     }
+
+
 
     ctx.status = 200
   }
@@ -89,18 +100,18 @@ class UserController extends Controller {
     const ctx = this.ctx
     const id = ctx.params.id
     const user = await ctx.service.user.show(id)
-    if(!user) {
+    if (!user) {
       ctx.body = {
         ...fo,
         message: '查无此商品'
       }
-    }else {
+    } else {
       const result = await ctx.service.user.update(id, ctx.request.body)
-      if(result){
+      if (result) {
         ctx.body = {
           ...so
         }
-      }else {
+      } else {
         ctx.body = {
           ...fo
         }
@@ -114,18 +125,18 @@ class UserController extends Controller {
     const ctx = this.ctx
     const id = ctx.params.id
     const user = await ctx.service.user.show(id)
-    if(!user) {
+    if (!user) {
       ctx.body = {
         ...fo,
         message: '查无此商品'
       }
-    }else {
+    } else {
       const result = await ctx.service.user.destroy(id)
-      if(result) {
+      if (result) {
         ctx.body = {
           ...so
         }
-      }else {
+      } else {
         ctx.body = {
           ...fo
         }

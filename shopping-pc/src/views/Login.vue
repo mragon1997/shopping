@@ -76,6 +76,30 @@ export default {
     },
     register() {
       console.log("用户注册", this.regForm);
+      let { password, repassword } = this.regForm;
+      if (password !== repassword) {
+        this.$message({
+          message: "两次输入的密码不一致",
+          type: "warning"
+        });
+        return;
+      }
+      this.axios
+        .post(`http://127.0.0.1:7001/api/user`, this.regForm)
+        .then(res => {
+          console.log("用户注册返回参数", res);
+          if (res.data.code === 0) {
+            this.$message({
+              message: "注册成功！",
+              type: "success"
+            });
+          } else {
+            this.$message({
+              message: res.data.message,
+              type: "warning"
+            });
+          }
+        });
     }
   }
 };
