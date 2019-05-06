@@ -11,7 +11,7 @@
               <el-input v-model="loginForm.password"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">登录</el-button>
+              <el-button type="primary" @click="login">登录</el-button>
               <el-button>重置</el-button>
             </el-form-item>
           </el-form>
@@ -28,7 +28,7 @@
               <el-input v-model="regForm.repassword"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">注册</el-button>
+              <el-button type="primary" @click="register">注册</el-button>
               <el-button>重置</el-button>
             </el-form-item>
           </el-form>
@@ -47,11 +47,36 @@ export default {
         password: ""
       },
       regForm: {
-          tel: '',
-          password: '',
-          repassword: ''
+        tel: "",
+        password: "",
+        repassword: ""
       }
     };
+  },
+  methods: {
+    login() {
+      console.log("用户登录", this.loginForm);
+      this.axios
+        .post(`http://127.0.0.1:7001/api/login`, this.loginForm)
+        .then(res => {
+          console.log("用户登录返回参数", res);
+          if (res.data.code === 0) {
+            this.$router.push({ name: "home" });
+            this.$message({
+              message: "登录成功！",
+              type: "success"
+            });
+          } else {
+            this.$message({
+              message: res.data.message,
+              type: "warning"
+            });
+          }
+        });
+    },
+    register() {
+      console.log("用户注册", this.regForm);
+    }
   }
 };
 </script>
