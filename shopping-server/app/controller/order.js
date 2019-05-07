@@ -35,6 +35,7 @@ class OrderController extends Controller {
       await Promise.all(orderList.map(async product => {
         let detail = await ctx.service.product.show(product.dataValues.productId)
         product.dataValues.detail = detail
+        product.dataValues.sumPrice = product.dataValues.productNum * detail.price
       }))
   
       ctx.body = {

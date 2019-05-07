@@ -3,26 +3,28 @@
     <!-- 商品基本信息 -->
     <div class="detail-info">
       <div class="info-left">
-        <img
-          :src="product.mainPic"
-          alt
-        >
+        <img :src="product.mainPic" alt>
       </div>
       <div class="info-right">
-        <div class="detail-name">{{product.name}}</div>
+        <div class="detail-name">{{ product.name }}</div>
         <div class="detail-label">
           <div class="detail-brand">苹果</div>
-          <div class="detail-price">{{product.price}}</div>
+          <div class="detail-price">{{ product.price }}</div>
         </div>
         <div class="detail-operate">
           <div class="operate-num">
-            <el-button icon="el-icon-minus" circle></el-button>
-            <div class="product-num">99</div>
-            <el-button icon="el-icon-plus" circle></el-button>
+            <el-button
+              @click="minusProductNum"
+              :disabled="productNum <= 1"
+              icon="el-icon-minus"
+              circle
+            ></el-button>
+            <div class="product-num">{{ productNum }}</div>
+            <el-button @click="addProductNum" icon="el-icon-plus" circle></el-button>
           </div>
           <div class="operate-btn">
-            <el-button type="danger">加入购物车</el-button>
-            <el-button type="success">立即购买</el-button>
+            <el-button type="danger" @click="addCart">加入购物车</el-button>
+            <el-button type="success" @click="goBuy">立即购买</el-button>
           </div>
         </div>
       </div>
@@ -32,10 +34,7 @@
     <!-- 商品详情图 -->
     <div class="detail-pic-list">
       <div class="detail-pic-item" v-for="pic in product.picList" :key="pic.id">
-        <img
-          :src="pic.picAddress"
-          alt
-        >
+        <img :src="pic.picAddress" alt>
       </div>
     </div>
   </div>
@@ -50,7 +49,8 @@ export default {
   data() {
     return {
       productId: "", // 商品id
-      product: {} // 商品详情数据
+      product: {}, // 商品详情数据
+      productNum: 1
     };
   },
   mounted() {
@@ -61,7 +61,7 @@ export default {
     this.productId = this.$route.params.productId;
 
     // 获取商品详情
-    this.getProductDetail()
+    this.getProductDetail();
   },
   methods: {
     /**
@@ -74,8 +74,100 @@ export default {
         .get(`http://127.0.0.1:7001/api/product/${productId}`)
         .then(res => {
           console.log("获取商品详情返回参数", res);
-            this.product = res.data.data
+          this.product = res.data.data;
         });
+    },
+    /**
+     * 商品数量 +1
+     */
+    addProductNum() {
+      this.productNum++;
+    },
+    /**
+     * 商品数量 -1
+     */
+    minusProductNum() {
+      this.productNum--;
+    },
+    /**
+     * 加入购物车
+     */
+    addCart() {
+      console.log("加入购物车");
+      this.getUserId();
+      let param = {
+        userId: this.userId || this.$store.state.userId,
+        productId: this.productId || this.$route.params.productId,
+        productNum: this.productNum
+      };
+      this.axios.post("http://127.0.0.1:7001/api/cart", param).then(res => {
+        console.log("用户加入购物车返回参数", res);
+        if (res.data.code === 0) {
+          this.$message({
+            message: "加入购物车成功",
+            type: "success"
+          });
+        } else {
+          this.$message({
+            message: res.data.message,
+            type: "warning"
+          });
+        }
+      });
+    },
+    /**
+     * 获取用户id
+     */
+    getUserId() {
+      // 当前用户的登录状态
+      let isLogin = this.$store.state.loginRole !== 0;
+      let userId = this.$store.state.userId;
+      console.log("当前用户是否登录：", isLogin);
+      console.log("当前登录用户的userId：", userId);
+      if (isLogin) {
+        this.userId = userId;
+      } else {
+        this.$router.push({
+          name: "login"
+        });
+        this.$message({
+          message: "用户未登录，请登录后重试",
+          type: "warning"
+        });
+      }
+    },
+    /**
+     * 购买商品
+     */
+    goBuy() {
+      console.log("购买商品");
+      this.$prompt("请输入订单地址", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      }).then(({ value }) => {
+        this.getUserId();
+        let param = {
+          userId: this.userId || this.$store.state.userId,
+          productId: this.productId || this.$route.params.productId,
+          productNum: this.productNum,
+          address: value
+        };
+        console.log('购买商品入参：', param)
+        this.axios.post("http://127.0.0.1:7001/api/order", param).then(res => {
+          console.log("购买商品返回参数", res);
+          if (res.data.code === 0) {
+            this.$message({
+              message: "下单成功",
+              type: "success"
+            });
+          } else {
+            this.$message({
+              message: res.data.message,
+              type: "warning"
+            });
+          }
+        });
+      });
     }
   }
 };
