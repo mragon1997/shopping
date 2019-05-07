@@ -32,6 +32,11 @@ class CartService extends Service {
     return result
   }
 
+  async destroyByUserId(userId) {
+    const result = await this.ctx.model.Cart.destroy({where:{userId: userId}})
+    return result
+  }
+
 
 }
 

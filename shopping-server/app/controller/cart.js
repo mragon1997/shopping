@@ -138,6 +138,8 @@ async settlement() {
   const userId = ctx.params.userId
   const cartList = await ctx.service.cart.listByUserId(userId)
   const { address } = ctx.request.body
+
+ 
   await Promise.all(cartList.map(async product => {
     let body = {
       userId,
@@ -147,6 +149,7 @@ async settlement() {
     }
     await ctx.service.order.create(body)
   }))
+  await ctx.service.cart.destroyByUserId(userId)
 
   ctx.body = {
     ...so

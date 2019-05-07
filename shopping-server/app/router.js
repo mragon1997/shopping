@@ -28,7 +28,7 @@ module.exports = app => {
   // 查询用户购物车接口
   router.get('/api/usercart/:userId', app.controller.cart.findCartByUserId)
   // 结算购物车接口
-  router.get('/api/settlement/:userId', app.controller.cart.settlement)
+  router.post('/api/settlement/:userId', app.controller.cart.settlement)
 
   // 查询用户订单接口
   router.get('/api/userorder/:userId', app.controller.order.findOrderByUserId)

@@ -8,11 +8,10 @@
     <div class="cart-bar">
       <div class="total-price">合计：{{totalPrice}}</div>
       <div class="cart-pay">
-        <el-button type="success">立即结算</el-button>
+        <el-button type="success" @click="settlementCart">立即结算</el-button>
       </div>
     </div>
   </div>
-  
 </template>
 <script>
 export default {
@@ -29,7 +28,7 @@ export default {
     this.getUserId();
 
     // 获取购物车列表
-    this.getCartList()
+    this.getCartList();
   },
   methods: {
     /**
@@ -62,17 +61,49 @@ export default {
         .get(`http://127.0.0.1:7001/api/usercart/${this.userId}`)
         .then(res => {
           console.log("获取购物车列表返回参数", res);
-          this.cartList = res.data.data
+          this.cartList = res.data.data;
         });
+    },
+    /**
+     * 结算购物车
+     */
+    settlementCart() {
+      console.log('结算购物车')
+      this.$prompt("请输入订单地址", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      }).then(({ value }) => {
+        this.getUserId();
+        let  userId = this.userId || this.$store.state.userId
+        let param = {
+          address: value
+        };
+        console.log("结算购物车入参：", param);
+        this.axios.post(`http://127.0.0.1:7001/api/settlement/${userId}`, param).then(res => {
+          console.log("结算购物车返回参数", res);
+          if (res.data.code === 0) {
+            this.$message({
+              message: "下单成功",
+              type: "success"
+            });
+            this.getCartList()
+          } else {
+            this.$message({
+              message: res.data.message,
+              type: "warning"
+            });
+          }
+        });
+      });
     }
   },
   computed: {
     totalPrice() {
-      let sum = 0
+      let sum = 0;
       this.cartList.forEach(cartItem => {
-        sum += cartItem.sumPrice
-      })
-      return sum
+        sum += cartItem.sumPrice;
+      });
+      return sum;
     }
   }
 };
