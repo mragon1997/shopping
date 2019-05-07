@@ -12,6 +12,11 @@ class CartService extends Service {
     return cart
   }
 
+  async listByUserId(userId) {
+    const list = await this.ctx.model.Cart.findAll({ where: { userId }})
+    return list
+  }
+
   async create({userId, productId, productNum, colorId}) {
     const cart = await this.ctx.model.Cart.create({userId, productId, productNum, colorId})
     return cart

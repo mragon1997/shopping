@@ -28,6 +28,24 @@ class CartController extends Controller {
     ctx.status = 200
   }
 
+  // 根据userId查询购物车
+  async findCartByUserId() {
+    const ctx = this.ctx
+    const cartList = await ctx.service.cart.listByUserId(ctx.params.userId)
+    await Promise.all(cartList.map(async product => {
+      let detail = await ctx.service.product.show(product.dataValues.productId)
+      product.dataValues.detail = detail
+      product.dataValues.sumPrice = product.dataValues.productNum * detail.price
+    }))
+
+    ctx.body = {
+      ...so,
+      data: cartList
+    }
+    ctx.status = 200
+
+  }
+
   // 查询单个商品
   async show() {
     const ctx = this.ctx
@@ -44,6 +62,8 @@ class CartController extends Controller {
     }
     ctx.status = 200
   }
+  
+  
 
   // 创建一个商品
   async create() {
