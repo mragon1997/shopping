@@ -132,6 +132,27 @@ class CartController extends Controller {
     }
     ctx.status = 200
   }
+// 用户结算购物车
+async settlement() {
+  const ctx = this.ctx
+  const userId = ctx.params.userId
+  const cartList = await ctx.service.cart.listByUserId(userId)
+  const { address } = ctx.request.body
+  await Promise.all(cartList.map(async product => {
+    let body = {
+      userId,
+      address,
+      productId: product.productId,
+      productNum: product.productNum
+    }
+    await ctx.service.order.create(body)
+  }))
+
+  ctx.body = {
+    ...so
+  }
+  ctx.status = 200
+}
 }
 
 module.exports = CartController

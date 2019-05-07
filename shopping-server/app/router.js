@@ -21,7 +21,15 @@ module.exports = app => {
 
 
   // business
+
+  // 用户登录接口
   router.post('/api/login', app.controller.user.login)
+
+  // 查询用户购物车接口
   router.get('/api/usercart/:userId', app.controller.cart.findCartByUserId)
+  // 结算购物车接口
+  router.get('/api/settlement/:userId', app.controller.cart.settlement)
+
+  // 查询用户订单接口
   router.get('/api/userorder/:userId', app.controller.order.findOrderByUserId)
 }
