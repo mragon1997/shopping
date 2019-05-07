@@ -5,15 +5,10 @@
       <div class="category-row">
         <div class="row-left">品牌</div>
         <div class="row-right">
-          <div class="category-item" v-for="brand in brandList" :key="brand.id">{{brand.brandName}}</div>
+          <div @click="brandFilter(-1)" :class="['category-item', {selected: currentBrand == -1}]">全部品牌</div>
+          <div  v-for="brand in brandList" :key="brand.id" @click="brandFilter(brand.id)" :class="['category-item', {selected: currentBrand == brand.id}]">{{brand.brandName}}</div>
         </div>
       </div>
-      <!-- <div class="category-row">
-        <div class="row-left">颜色</div>
-        <div class="row-right">
-          <div class="category-item" v-for="color in colorList" :key="color.id">{{color.colorName}}</div>
-        </div>
-      </div> -->
     </div>
     <!-- 商品类目结束 -->
 
@@ -21,6 +16,7 @@
     <div class="product-list">
       <div class="product-item" v-for="product in productList" :key="product.id">
         <ProductCard
+          v-show="currentBrand === -1 || currentBrand === product.brandId"
           :productId="product.id"
           :mainPic="product.mainPic"
           :name="product.name"
@@ -42,7 +38,8 @@ export default {
     return {
       productList: [], // 商品列表
       brandList: [], // 品牌列表
-      colorList: [] // 颜色列表
+      colorList: [], // 颜色列表
+      currentBrand: -1
     };
   },
   mounted() {
@@ -87,6 +84,13 @@ export default {
         console.log("获取颜色列表返回参数", res)
         this.colorList = res.data.data
       })
+    },
+    /**
+     * 按照品牌筛选
+     */
+    brandFilter(brandId) {
+      console.log('筛选品牌', brandId)
+      this.currentBrand = brandId
     }
   }
 };
@@ -118,11 +122,15 @@ export default {
 .row-right {
   display: flex;
 }
+.category-item.selected {
+  color: red;
+}
 .category-item {
   margin-left: 20px;
   font-size: 14px;
   color: rgba(51, 51, 51, 1);
   line-height: 40px;
+  cursor: pointer;
 }
 
 .product-list {
