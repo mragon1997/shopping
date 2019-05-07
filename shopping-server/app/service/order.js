@@ -11,6 +11,11 @@ class OrderService extends Service {
     const order = await this.ctx.model.Order.findById(id)
     return order
   }
+  
+  async listByUserId(userId) {
+    const list = await this.ctx.model.Order.findAll({ where: { userId }})
+    return list
+  }
 
   async create({userId, productId, productNum, colorId, address}) {
     const order = await this.ctx.model.Order.create({userId, productId, productNum, colorId, address})

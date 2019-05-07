@@ -23,4 +23,5 @@ module.exports = app => {
   // business
   router.post('/api/login', app.controller.user.login)
   router.get('/api/usercart/:userId', app.controller.cart.findCartByUserId)
+  router.get('/api/userorder/:userId', app.controller.order.findOrderByUserId)
 }

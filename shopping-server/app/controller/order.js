@@ -28,6 +28,23 @@ class OrderController extends Controller {
     ctx.status = 200
   }
 
+    // 根据userId查询订单
+    async findOrderByUserId() {
+      const ctx = this.ctx
+      const orderList = await ctx.service.order.listByUserId(ctx.params.userId)
+      await Promise.all(orderList.map(async product => {
+        let detail = await ctx.service.product.show(product.dataValues.productId)
+        product.dataValues.detail = detail
+      }))
+  
+      ctx.body = {
+        ...so,
+        data: orderList
+      }
+      ctx.status = 200
+  
+    }
+
   // 查询单个商品
   async show() {
     const ctx = this.ctx
@@ -44,6 +61,8 @@ class OrderController extends Controller {
     }
     ctx.status = 200
   }
+
+
 
   // 创建一个商品
   async create() {
