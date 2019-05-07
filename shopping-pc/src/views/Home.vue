@@ -66,8 +66,8 @@ export default {
     return {
       // 幻灯片用图
       swipers: [
-        "http://iph.href.lu/879x200?text=1",
-        "http://iph.href.lu/879x200?text=2",
+        "http://img30.360buyimg.com/devfe/jfs/t1/38447/14/6580/849695/5cd164d7E14d021de/256b4bab1c62fe99.png",
+        "http://img14.360buyimg.com/devfe/jfs/t1/39414/31/6476/594467/5cd1682dE8c6a0b0f/2b8a29415bc44a5f.png",
         "http://iph.href.lu/879x200?text=3",
         "http://iph.href.lu/879x200?text=4"
       ],
