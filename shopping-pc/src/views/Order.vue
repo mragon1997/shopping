@@ -4,10 +4,9 @@
       <el-table-column prop="detail.name" label="商品" align="center"></el-table-column>
       <el-table-column prop="productNum" label="数量" align="center"></el-table-column>
       <el-table-column prop="sumPrice" label="总价" align="center"></el-table-column>
-        <el-table-column prop="address" label="地址" align="center"></el-table-column>
+      <el-table-column prop="address" label="地址" align="center"></el-table-column>
     </el-table>
   </div>
-  
 </template>
 <script>
 export default {
@@ -24,7 +23,7 @@ export default {
     this.getUserId();
 
     // 获取购物车列表
-    this.getOrderList()
+    this.getOrderList();
   },
   methods: {
     /**
@@ -57,7 +56,7 @@ export default {
         .get(`http://127.0.0.1:7001/api/userorder/${this.userId}`)
         .then(res => {
           console.log("获取订单列表返回参数", res);
-          this.orderList = res.data.data
+          this.orderList = res.data.data;
         });
     }
   }

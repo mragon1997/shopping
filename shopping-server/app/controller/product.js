@@ -15,15 +15,15 @@ class ProductController extends Controller {
   async index() {
     const ctx = this.ctx
     const productList = await ctx.service.product.index()
-    if(productList) {
-      ctx.body = {
-        ...so,
-        data: productList
-      }
-    }else {
-      ctx.body = {
-        ...fo
-      }
+
+    await Promise.all(productList.map(async product => {
+      product.dataValues.detail = await ctx.service.product.show(product.dataValues.id)
+    }))
+
+
+    ctx.body = {
+      ...so,
+      data: productList
     }
     ctx.status = 200
   }

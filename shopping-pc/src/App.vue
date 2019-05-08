@@ -15,6 +15,7 @@
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="productadmin" v-if="$store.state.loginRole == 2">商品管理</el-dropdown-item>
                 <el-dropdown-item command="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -39,11 +40,14 @@ export default {
     /**
      * 下拉菜单事件处理
      */
-    handleCommand(command){
-      console.log('下拉菜单点击事件', command)
-      switch(command){
-        case 'logout':
+    handleCommand(command) {
+      console.log("下拉菜单点击事件", command);
+      switch (command) {
+        case "logout":
           this.userLogout();
+          break;
+        case "productadmin":
+          this.$router.push({ name: "productadmin"});
           break;
       }
     },
@@ -51,7 +55,7 @@ export default {
      * 用户退出登录
      */
     userLogout() {
-      console.log('用户退出登录')
+      console.log("用户退出登录");
       this.$store.dispatch("logout");
       console.log(
         "用户登录状态",
