@@ -50,5 +50,11 @@ export default new Router({
       component: () =>
         import(/* webpackChunkName: "productadmin" */ "./views/ProductAdmin.vue")
     },
+    {
+      path: "/actadmin",
+      name: "actadmin",
+      component: () =>
+        import(/* webpackChunkName: "productadmin" */ "./views/ActAdmin.vue")
+    },
   ]
 });

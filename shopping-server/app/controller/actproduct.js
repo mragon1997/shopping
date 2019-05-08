@@ -28,10 +28,12 @@ class ActProductController extends Controller {
     ctx.status = 200
   }
 
-  // 查询单个商品
   async show() {
     const ctx = this.ctx
-    const actproduct = await ctx.service.actproduct.show(ctx.params.id)
+    const actproduct = await ctx.service.actproduct.listById(ctx.params.id)
+    await Promise.all(actproduct.map(async product => {
+      product.dataValues.detail = await ctx.service.product.show(product.dataValues.productId)
+    }))
     if(actproduct) {
       ctx.body = {
         ...so,

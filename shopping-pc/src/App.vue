@@ -16,6 +16,7 @@
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="productadmin" v-if="$store.state.loginRole == 2">商品管理</el-dropdown-item>
+                <el-dropdown-item command="actadmin" v-if="$store.state.loginRole == 2">活动管理</el-dropdown-item>
                 <el-dropdown-item command="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -48,6 +49,9 @@ export default {
           break;
         case "productadmin":
           this.$router.push({ name: "productadmin"});
+          break;
+        case "actadmin":
+          this.$router.push({ name: "actadmin"});
           break;
       }
     },
