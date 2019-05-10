@@ -32,4 +32,7 @@ module.exports = app => {
 
   // 查询用户订单接口
   router.get('/api/userorder/:userId', app.controller.order.findOrderByUserId)
+
+  // 查询商品详情图
+  router.get('/api/productpic/:productId', app.controller.detailpic.findDetailPicByProductId)
 }

@@ -17,7 +17,9 @@
         <el-table-column property="productId" label="商品编号" align="center"></el-table-column>
         <el-table-column property="detail.name" label="商品名称" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
-          <el-button @click="handleDestoryAct(scope.row.id)" type="danger">删除</el-button>
+          <template slot-scope="scope">
+            <el-button @click="handleDestoryActProduct(scope.row.id)" type="danger">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <el-form :model="productAdminForm" class="add-product-form" :inline="true">
@@ -63,8 +65,8 @@ export default {
      * 获取指定活动的商品列表
      */
     getProductListByActId() {
-        console.log('获取指定活动的商品列表')
-          // 查询指定活动的商品
+      console.log("获取指定活动的商品列表");
+      // 查询指定活动的商品
       this.axios
         .get(`http://127.0.0.1:7001/api/actproduct/${this.actId}`)
         .then(res => {
@@ -122,8 +124,8 @@ export default {
      */
     handleActProduct(actId) {
       console.log("点击商品管理按钮", actId);
-      this.actId = actId
-      this.getProductListByActId()
+      this.actId = actId;
+      this.getProductListByActId();
     },
     /**
      * 点击删除活动按钮
@@ -165,7 +167,7 @@ export default {
               message: "添加活动商品成功",
               type: "success"
             });
-            this.getProductListByActId()
+            this.getProductListByActId();
           } else {
             this.$message({
               message: res.data.message || "网络繁忙",
@@ -173,6 +175,27 @@ export default {
             });
           }
         });
+    },
+    /**
+     * 点击删除活动商品按钮
+     */
+    handleDestoryActProduct(actProductId) {
+      console.log('删除活动商品')
+      this.axios.delete(`http://127.0.0.1:7001/api/actproduct/${actProductId}`).then(res => {
+                console.log("删除活动商品返回参数", res);
+        if (res && res.data && res.data.code === 0) {
+          this.$message({
+            message: "删除成功",
+            type: "success"
+          });
+          this.getProductListByActId();
+        } else {
+          this.$message({
+            message: res.data.message || "网络繁忙",
+            type: "warnning"
+          });
+        }
+      });
     }
   }
 };

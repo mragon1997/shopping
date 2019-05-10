@@ -112,6 +112,22 @@ class DetailpicController extends Controller {
     }
     ctx.status = 200
   }
+
+  // 根据商品id查找详情图
+  async findDetailPicByProductId() {
+    const ctx = this.ctx
+    const productId = ctx.params.productId
+    const detailpicList = await ctx.service.detailpic.listById(productId)
+    ctx.body = detailpicList ? {
+      ...so,
+      data: detailpicList
+    } : {
+      ...fo
+    }
+
+    ctx.status = 200
+
+  }
 }
 
 module.exports = DetailpicController

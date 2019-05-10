@@ -1,5 +1,6 @@
 <template>
   <div class="product-admin">
+    <!-- 商品列表 -->
     <el-table style="width: 100%" :data="productList">
       <el-table-column prop="id" label="编号" align="center"></el-table-column>
       <el-table-column prop="name" label="名称" align="center"></el-table-column>
@@ -8,11 +9,14 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button @click="handleUpdateProduct(scope.row.id)">编辑</el-button>
+          <el-button @click="handleDetailPic(scope.row.id)">详图管理</el-button>
           <el-button @click="handleDestoryProduct(scope.row.id)" type="danger">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-button type="primary" class="upload-product" @click="handleUploadProduct">上传商品</el-button>
+
+    <!-- 编辑商品对话框 -->
     <el-dialog title="收货地址" :visible.sync="productDialogShow">
       <el-form :model="productDialogForm">
         <el-form-item label="商品名" label-width="120px">
@@ -40,6 +44,25 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 商品详情图对话框 -->
+    <el-dialog title="详图管理" :visible.sync="detailPicDialogShow">
+      <el-table :data="productPicList">
+        <el-table-column property="id" label="编号" align="center"></el-table-column>
+        <el-table-column property="picAddress" label="图片地址" align="center"></el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button @click="handleDestoryPic(scope.row.id)" type="danger">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-form :model="productPicAdminForm" class="add-pic-form" :inline="true">
+        <el-form-item label="商品编号：">
+          <el-input v-model="productPicAdminForm.address"></el-input>
+        </el-form-item>
+        <el-button type="primary" @click="handleAddProductPic">添加商品</el-button>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -48,6 +71,7 @@ export default {
     return {
       productList: [], // 商品列表
       productDialogShow: false, // 商品对话框是否展示
+      detailPicDialogShow: false, // 商品详情图对话框是否展示
       // 商品对话框表单
       productDialogForm: {
         name: "",
@@ -55,8 +79,13 @@ export default {
         price: 0,
         mainPic: ""
       },
+      productId: -1, // 当前编辑的商品id
+      productPicList: [], // 商品详情图列表
       brandList: [], // 品牌列表
-      isUpload: false // 提交表单是否是上传新商品
+      isUpload: false, // 提交表单是否是上传新商品
+      productPicAdminForm: {
+        address: ""
+      } // 详图管理表单
     };
   },
   mounted() {
@@ -80,14 +109,26 @@ export default {
       });
     },
     /**
-     * 获取详情图列表
+     * 获取品牌列表
      */
     getBrandList() {
       console.log("获取品牌列表");
       this.axios.get("http://127.0.0.1:7001/api/brand").then(res => {
-        console.log("获取商品列表返回参数:", res);
+        console.log("获取品牌列表返回参数:", res);
         this.brandList = res.data.data;
       });
+    },
+    /**
+     * 获取某商品的详情图
+     */
+    getProductPic() {
+      console.log("获取商品详情图", this.productId);
+      this.axios
+        .get(`http://127.0.0.1:7001/api/productpic/${this.productId}`)
+        .then(res => {
+          console.log("获取商品详情图返回参数", res);
+          this.productPicList = res.data.data;
+        });
     },
 
     /**
@@ -109,6 +150,66 @@ export default {
       });
       this.isUpload = false;
       this.productDialogShow = true;
+    },
+    /**
+     * 点击详图管理按钮
+     */
+    handleDetailPic(productId) {
+      console.log("点击详图管理按钮");
+      this.productId = productId;
+      this.getProductPic();
+      this.detailPicDialogShow = true;
+    },
+    /**
+     * 点击添加详情图按钮
+     */
+    handleAddProductPic() {
+      console.log("点击添加详情图");
+      let param = {
+        productId: this.productId,
+        picAddress: this.productPicAdminForm.address
+      };
+      console.log("添加详情图入参", param);
+      this.axios
+        .post("http://127.0.0.1:7001/api/detailpic", param)
+        .then(res => {
+          console.log("添加详情图返回参数", res);
+          if (res && res.data && res.data.code === 0) {
+            this.$message({
+              message: "添加详情图成功",
+              type: "success"
+            });
+            this.getProductPic();
+          } else {
+            this.$message({
+              message: res.data.message || "网络繁忙",
+              type: "warnning"
+            });
+          }
+        });
+    },
+    /**
+     * 点击删除详图按钮
+     */
+    handleDestoryPic(detailpicId){
+      console.log('删除详图', detailpicId)
+            this.axios.delete(`http://127.0.0.1:7001/api/detailpic/${detailpicId}`).then(res => {
+        console.log("删除详图返回参数", res);
+        if (res && res.data && res.data.code === 0) {
+          this.$message({
+            message: "删除成功",
+            type: "success"
+          });
+          this.getProductPic();
+        } else {
+          this.$message({
+            message: res.data.message || "网络繁忙",
+            type: "warnning"
+          });
+        }
+      });
+
+
     },
     /**
      * 点击删除商品按钮
@@ -202,5 +303,8 @@ export default {
 <style scoped>
 .upload-product {
   margin-top: 100px;
+}
+.add-pic-form {
+  margin-top: 30px;
 }
 </style>
