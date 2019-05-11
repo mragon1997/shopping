@@ -40,4 +40,7 @@ module.exports = app => {
 
   // 查询用户登录日期
   router.get('/api/userlogindate', app.controller.actiondetail.conuntLoginDate)
+
+  // 用户浏览商品统计
+  router.get('/api/userbrowseproduct', app.controller.actiondetail.countBrowseProduct)
 }

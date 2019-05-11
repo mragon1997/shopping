@@ -33,7 +33,18 @@ class ActionDetailService extends Service {
       attributes: ['actionDate', [sequelize.fn('COUNT', sequelize.col('actionDate')), 'count']],
       group: 'actionDate',
       raw: true,
-      order: [['actionDate', 'DESC']]
+      order: [['actionDate', 'DESC']],
+      where: {actionId: 1}
+    })
+    return list
+  }
+
+  async countBrowseProduct() {
+    const list = await this.ctx.model.Actiondetail.findAll({
+      attributes: ['logId', [sequelize.fn('COUNT', sequelize.col('logId')), 'count']],
+      group: 'logId',
+      raw: true,
+      where: {actionId: 2}
     })
     return list
   }

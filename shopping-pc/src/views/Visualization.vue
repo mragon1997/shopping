@@ -13,22 +13,22 @@
         <v-chart :forceFit="true" :height="300" :data="browseData" :scale="browseScale">
           <v-tooltip/>
           <v-axis/>
-          <v-bar position="year*sales"/>
+          <v-bar position="name*count"/>
         </v-chart>
       </div>
       <div class="bar-item">
-        <v-chart :forceFit="true" :height="300" :data="browseData" :scale="browseScale">
+        <!-- <v-chart :forceFit="true" :height="300" :data="browseData" :scale="browseScale">
           <v-tooltip/>
           <v-axis/>
           <v-bar position="year*sales"/>
-        </v-chart>
+        </v-chart> -->
       </div>
       <div class="bar-item">
-        <v-chart :forceFit="true" :height="300" :data="browseData" :scale="browseScale">
+        <!-- <v-chart :forceFit="true" :height="300" :data="browseData" :scale="browseScale">
           <v-tooltip/>
           <v-axis/>
-          <v-bar position="year*sales"/>
-        </v-chart>
+          <v-bar position="name*count"/>
+        </v-chart> -->
       </div>
     </div>
   </div>
@@ -37,16 +37,6 @@
 <script>
 const DataSet = require("@antv/data-set");
 
-const browseData = [
-  { year: "1951 年", sales: 38 },
-  { year: "1952 年", sales: 52 },
-  { year: "1956 年", sales: 61 },
-  { year: "1957 年", sales: 145 },
-  { year: "1958 年", sales: 48 },
-  { year: "1959 年", sales: 38 },
-  { year: "1960 年", sales: 38 },
-  { year: "1962 年", sales: 38 }
-];
 
 const browseScale = [
   {
@@ -68,7 +58,7 @@ export default {
     return {
       loginData: [],
       loginScale,
-      browseData,
+      browseData: [],
       browseScale
     };
   },
@@ -77,6 +67,9 @@ export default {
 
     // 获取用户登录趋势
     this.getUserLoginTrend();
+
+    // 获取用户浏览商品
+    this.getUserBrowseProduct();
   },
   methods: {
     /**
@@ -94,6 +87,16 @@ export default {
           value: "登录用户数"
         });
         this.loginData = dv.rows;
+      });
+    },
+    /**
+     * 获取用户浏览商品数据
+     */
+    getUserBrowseProduct() {
+      console.log("获取用户浏览商品");
+      this.axios.get("http://localhost:7001/api/userbrowseproduct").then(res => {
+        console.log("获取用户浏览商品返回参数", res);
+        this.browseData = res.data.data;
       });
     }
   }

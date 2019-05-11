@@ -129,6 +129,28 @@ class ActionDetailController extends Controller {
     ctx.status = 200
     
   }
+
+  async countBrowseProduct() {
+    const ctx = this.ctx
+    const countList = await ctx.service.actiondetail.countBrowseProduct()
+
+    await Promise.all(countList.map(async product => {
+      let detail = await ctx.service.product.show(product.logId)
+      product.name = detail.name
+    }))
+    if(countList) {
+      ctx.body = {
+        ...so,
+        data: countList
+      }
+    }else {
+      ctx.body = {
+        ...fo
+      }
+    }
+    ctx.status = 200
+    
+  }
 }
 
 module.exports = ActionDetailController
