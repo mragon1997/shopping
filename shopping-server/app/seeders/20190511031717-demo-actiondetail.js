@@ -209,14 +209,6 @@ module.exports = {
           updated_at: new Date()
         },
         {
-          actionId: 3,
-          actionDate: '2019-5-10',
-          actionHour: '10',
-          logId: 5,
-          created_at: new Date(),
-          updated_at: new Date()
-        },
-        {
           actionId: 2,
           actionDate: '2019-5-4',
           actionHour: '12',

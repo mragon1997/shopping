@@ -149,7 +149,48 @@ class ActionDetailController extends Controller {
       }
     }
     ctx.status = 200
-    
+  }
+
+  async countAddCart() {
+    const ctx = this.ctx
+    const countList = await ctx.service.actiondetail.countAddCart()
+
+    await Promise.all(countList.map(async product => {
+      let detail = await ctx.service.product.show(product.logId)
+      product.name = detail.name
+    }))
+    if(countList) {
+      ctx.body = {
+        ...so,
+        data: countList
+      }
+    }else {
+      ctx.body = {
+        ...fo
+      }
+    }
+    ctx.status = 200
+  }
+
+  async countAddOrder() {
+    const ctx = this.ctx
+    const countList = await ctx.service.actiondetail.countAddOrder()
+
+    await Promise.all(countList.map(async product => {
+      let detail = await ctx.service.product.show(product.logId)
+      product.name = detail.name
+    }))
+    if(countList) {
+      ctx.body = {
+        ...so,
+        data: countList
+      }
+    }else {
+      ctx.body = {
+        ...fo
+      }
+    }
+    ctx.status = 200
   }
 }
 

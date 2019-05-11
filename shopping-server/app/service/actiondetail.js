@@ -49,6 +49,26 @@ class ActionDetailService extends Service {
     return list
   }
 
+  async countAddCart() {
+    const list = await this.ctx.model.Actiondetail.findAll({
+      attributes: ['logId', [sequelize.fn('COUNT', sequelize.col('logId')), 'count']],
+      group: 'logId',
+      raw: true,
+      where: {actionId: 3}
+    })
+    return list
+  }
+  
+  async countAddOrder() {
+    const list = await this.ctx.model.Actiondetail.findAll({
+      attributes: ['logId', [sequelize.fn('COUNT', sequelize.col('logId')), 'count']],
+      group: 'logId',
+      raw: true,
+      where: {actionId: 4}
+    })
+    return list
+  }
+
 
 }
 

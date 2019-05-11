@@ -43,4 +43,10 @@ module.exports = app => {
 
   // 用户浏览商品统计
   router.get('/api/userbrowseproduct', app.controller.actiondetail.countBrowseProduct)
+
+   // 用户加车商品统计
+   router.get('/api/useraddcart', app.controller.actiondetail.countAddCart)
+
+  // 用户下单商品统计
+  router.get('/api/useraddorder', app.controller.actiondetail.countAddOrder)
 }
