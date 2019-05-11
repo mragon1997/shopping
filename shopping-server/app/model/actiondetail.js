@@ -6,8 +6,8 @@ module.exports = app => {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
     actionId: INTEGER,
     logId: INTEGER,
-    actionDate: String,
-    actionHour: String,
+    actionDate: STRING(255),
+    actionHour: STRING(255),
     created_at: DATE,
     updated_at: DATE,
   });

@@ -18,6 +18,8 @@ module.exports = app => {
   router.resources('colors', '/api/color', app.controller.color)
   router.resources('orders', '/api/order', app.controller.order)
   router.resources('roles', '/api/role', app.controller.role)
+  router.resources('actions', '/api/action', app.controller.action)
+  router.resources('actiondetails', '/api/actiondetail', app.controller.actiondetail)
 
 
   // business
