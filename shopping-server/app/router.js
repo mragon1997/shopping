@@ -37,4 +37,7 @@ module.exports = app => {
 
   // 查询商品详情图
   router.get('/api/productpic/:productId', app.controller.detailpic.findDetailPicByProductId)
+
+  // 查询用户登录日期
+  router.get('/api/userlogindate', app.controller.actiondetail.conuntLoginDate)
 }

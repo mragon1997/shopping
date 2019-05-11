@@ -112,6 +112,23 @@ class ActionDetailController extends Controller {
     }
     ctx.status = 200
   }
+
+  async conuntLoginDate() {
+    const ctx = this.ctx
+    const countList = await ctx.service.actiondetail.conuntLoginDate()
+    if(countList) {
+      ctx.body = {
+        ...so,
+        data: countList
+      }
+    }else {
+      ctx.body = {
+        ...fo
+      }
+    }
+    ctx.status = 200
+    
+  }
 }
 
 module.exports = ActionDetailController
