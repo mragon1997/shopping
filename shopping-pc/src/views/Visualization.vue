@@ -10,25 +10,25 @@
 
     <div class="chart-bar-group">
       <div class="bar-item">
-        <v-chart :forceFit="true" :height="300" :data="browseData" :scale="browseScale">
+        <v-chart :forceFit="true" :height="300" :data="browseData" :scale="barScale">
           <v-tooltip/>
           <v-axis/>
           <v-bar position="name*count"/>
         </v-chart>
       </div>
       <div class="bar-item">
-        <!-- <v-chart :forceFit="true" :height="300" :data="browseData" :scale="browseScale">
-          <v-tooltip/>
-          <v-axis/>
-          <v-bar position="year*sales"/>
-        </v-chart> -->
-      </div>
-      <div class="bar-item">
-        <!-- <v-chart :forceFit="true" :height="300" :data="browseData" :scale="browseScale">
+        <v-chart :forceFit="true" :height="300" :data="cartData" :scale="barScale">
           <v-tooltip/>
           <v-axis/>
           <v-bar position="name*count"/>
-        </v-chart> -->
+        </v-chart>
+      </div>
+      <div class="bar-item">
+        <v-chart :forceFit="true" :height="300" :data="orderData" :scale="barScale">
+          <v-tooltip/>
+          <v-axis/>
+          <v-bar position="name*count"/>
+        </v-chart>
       </div>
     </div>
   </div>
@@ -37,8 +37,7 @@
 <script>
 const DataSet = require("@antv/data-set");
 
-
-const browseScale = [
+const barScale = [
   {
     dataKey: "sales",
     tickInterval: 20
@@ -59,7 +58,9 @@ export default {
       loginData: [],
       loginScale,
       browseData: [],
-      browseScale
+      cartData: [],
+      orderData: [],
+      barScale
     };
   },
   mounted() {
@@ -70,6 +71,12 @@ export default {
 
     // 获取用户浏览商品
     this.getUserBrowseProduct();
+
+    // 获取用户加车数据
+    this.getUserAddCart();
+
+    // 获取用户下单商品数据
+    this.getUserAddOrder();
   },
   methods: {
     /**
@@ -94,9 +101,31 @@ export default {
      */
     getUserBrowseProduct() {
       console.log("获取用户浏览商品");
-      this.axios.get("http://localhost:7001/api/userbrowseproduct").then(res => {
-        console.log("获取用户浏览商品返回参数", res);
-        this.browseData = res.data.data;
+      this.axios
+        .get("http://localhost:7001/api/userbrowseproduct")
+        .then(res => {
+          console.log("获取用户浏览商品返回参数", res);
+          this.browseData = res.data.data;
+        });
+    },
+    /**
+     * 获取用户加车数据
+     */
+    getUserAddCart() {
+      console.log("获取用户加车商品");
+      this.axios.get("http://localhost:7001/api/useraddcart").then(res => {
+        console.log("获取用户加车商品返回参数", res);
+        this.cartData = res.data.data;
+      });
+    },
+    /**
+     * 获取用户下单商品数据
+     */
+    getUserAddOrder() {
+      console.log("获取用户下单商品");
+      this.axios.get("http://localhost:7001/api/useraddorder").then(res => {
+        console.log("获取用户下单商品返回参数", res);
+        this.orderData = res.data.data;
       });
     }
   }

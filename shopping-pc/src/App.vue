@@ -7,7 +7,6 @@
           <el-menu-item index="/about">商品列表</el-menu-item>
           <el-menu-item index="/cart">购物车</el-menu-item>
           <el-menu-item index="/order">订单</el-menu-item>
-           <el-menu-item index="/visualization">可视化</el-menu-item>
           <div class="nav-right">
             <router-link class="nav-login" to="/login" v-if="$store.state.loginRole == 0">登录</router-link>
             <el-dropdown v-if="$store.state.loginRole != 0" @command="handleCommand">
@@ -18,6 +17,7 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="productadmin" v-if="$store.state.loginRole == 2">商品管理</el-dropdown-item>
                 <el-dropdown-item command="actadmin" v-if="$store.state.loginRole == 2">活动管理</el-dropdown-item>
+                <el-dropdown-item command="visualization" v-if="$store.state.loginRole == 2">后台数据</el-dropdown-item>
                 <el-dropdown-item command="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -49,10 +49,13 @@ export default {
           this.userLogout();
           break;
         case "productadmin":
-          this.$router.push({ name: "productadmin"});
+          this.$router.push({ name: "productadmin" });
           break;
         case "actadmin":
-          this.$router.push({ name: "actadmin"});
+          this.$router.push({ name: "actadmin" });
+          break;
+        case "visualization":
+          this.$router.push({ name: "visualization"});
           break;
       }
     },
