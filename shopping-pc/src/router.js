@@ -56,5 +56,11 @@ export default new Router({
       component: () =>
         import(/* webpackChunkName: "productadmin" */ "./views/ActAdmin.vue")
     },
+    {
+      path: "/visualization",
+      name: "visualization",
+      component: () =>
+        import(/* webpackChunkName: "visualization" */ "./views/Visualization.vue")
+    },
   ]
 });
