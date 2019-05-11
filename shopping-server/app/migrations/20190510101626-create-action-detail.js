@@ -5,6 +5,7 @@ module.exports = {
     await queryInterface.createTable('actiondetails', {
       id: { type: INTEGER, primaryKey: true, autoIncrement: true },
       logId: INTEGER,
+      actionId: INTEGER,
       actionDate: STRING(255),
       actionHour: STRING(255),
       created_at: DATE,
