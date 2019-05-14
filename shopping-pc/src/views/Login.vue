@@ -3,33 +3,45 @@
     <div class="login-window">
       <el-tabs type="border-card">
         <el-tab-pane label="登录">
-          <el-form :label-position="labelPosition" label-width="90px" :model="loginForm">
-            <el-form-item label="手机号：">
-              <el-input v-model="loginForm.tel"></el-input>
+          <!-- 增加rules ref status-icon是显示状态图标 -->
+          <el-form :label-position="labelPosition" label-width="90px" :model="loginForm"
+          :rules="rules" ref="loginForm" status-icon>
+            
+            <!-- change -->
+            <el-form-item label="手机号" prop="tel">
+              <el-input v-model.number="loginForm.tel"></el-input>
             </el-form-item>
-            <el-form-item label="密码：">
-              <el-input v-model="loginForm.password"></el-input>
+            <el-form-item label="密码" prop="password">
+              <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
             </el-form-item>
+            <!-- change end -->
+            
             <el-form-item>
-              <el-button type="primary" @click="login">登录</el-button>
-              <el-button>重置</el-button>
+              <el-button type="primary" @click="login('loginForm')">登录</el-button>
+              <el-button @click="resetForm('loginForm')">重置</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="注册">
-          <el-form :label-position="labelPosition" label-width="90px" :model="regForm">
-            <el-form-item label="手机号：">
-              <el-input v-model="regForm.tel"></el-input>
+          <!-- 增加rules ref status-icon是显示状态图标 -->
+          <el-form :label-position="labelPosition" label-width="90px" :model="regForm"
+          :rules="rules" ref="regForm" status-icon>
+            
+            <!-- change -->
+            <el-form-item label="手机号" prop="tel">
+              <el-input v-model.number="regForm.tel"></el-input>
             </el-form-item>
-            <el-form-item label="密码：">
-              <el-input v-model="regForm.password"></el-input>
+            <el-form-item label="密码" prop="password">
+              <el-input type="password" v-model="regForm.password" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="确认密码：">
-              <el-input v-model="regForm.repassword"></el-input>
+            <el-form-item label="确认密码" prop="repassword">
+              <el-input type="password" v-model="regForm.repassword" autocomplete="off"></el-input>
             </el-form-item>
+            <!-- change end -->
+            
             <el-form-item>
-              <el-button type="primary" @click="register">注册</el-button>
-              <el-button>重置</el-button>
+              <el-button type="primary" @click="register('regForm')">注册</el-button>
+              <el-button @click="resetForm('regForm')">重置</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -40,7 +52,57 @@
 <script>
 export default {
   data() {
+
+//change
+    var checkAge = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('电话不能为空'));
+        }
+        setTimeout(() => {
+          if (!Number.isInteger(value)) {
+            callback(new Error('请输入数字值'));
+          } else {
+              callback();
+          }
+        });
+      };
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.regForm.password !== '') {
+            this.$refs.regForm.validateField('repassword');
+          }
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.regForm.password) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
+    //change end
+
     return {
+
+      //change
+        rules: {
+          password: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+          repassword: [
+            { validator: validatePass2, trigger: 'blur' }
+          ],
+          tel: [
+            { validator: checkAge, trigger: 'blur' }
+          ]
+        },
+        //change end
+
       labelPosition: "left",
       loginForm: {
         tel: "",
@@ -54,7 +116,7 @@ export default {
     };
   },
   methods: {
-    login() {
+    login(formName) {
       console.log("用户登录", this.loginForm);
       console.log("用户登录状态", this.$store.state.loginRole)
       this.axios
@@ -76,10 +138,46 @@ export default {
             });
           }
         });
+
+        //change 重置
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log('账号密码不匹配')
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+        //change end
     },
-    register() {
+    register(formName) {
+      
       console.log("用户注册", this.regForm);
-      let { password, repassword } = this.regForm;
+
+      //change
+      this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log('输入信息正确')
+
+            //输入正确后输入框清空
+            this.$refs[formName].resetFields();
+          } else {
+            console.log('error submit!!');
+            
+            return false;
+          }
+        });
+        //change end
+
+      //增加接收tel
+      let { tel,password, repassword } = this.regForm;
+
+      //change
+      if(tel=='' || password == "" || repassword == ""){
+            return;
+          } 
+      //change end
+
       if (password !== repassword) {
         this.$message({
           message: "两次输入的密码不一致",
@@ -96,14 +194,21 @@ export default {
               message: "注册成功！",
               type: "success"
             });
-          } else {
+          }
+          else {
             this.$message({
               message: res.data.message,
               type: "warning"
             });
           }
         });
-    }
+    },
+    
+    //change 重置
+   resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+    //change end
   }
 };
 </script>

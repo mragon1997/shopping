@@ -94,6 +94,11 @@ body {
   height: 100%;
 }
 .el-header {
+
+  /* change */
+  min-width: 800px;
+  /* change end*/
+
   padding: 0;
 }
 .el-menu.el-menu--horizontal {
