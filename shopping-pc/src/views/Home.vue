@@ -96,16 +96,42 @@ export default {
 </script>
 
 <style>
+
+.home{
+  /* change */
+  min-width: 450px;
+  /* change end*/
+}
+
+/* change */
+.el-carousel{
+  min-width: 800px;
+}
+/* change end */
+
 .swiper-img {
   width: 100%;
   height: 400px;
 }
 .main-label {
+
+  /* change */
+  overflow: auto;
+  /*change end  */
+
   width: 100%;
   padding: 50px;
   box-sizing: border-box;
 }
 .label-title {
+
+  /* change */
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  /* change end */
+
   font-size: 24px;
   text-align: center;
 }
