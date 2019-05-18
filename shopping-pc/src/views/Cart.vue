@@ -4,6 +4,16 @@
       <el-table-column prop="detail.name" label="商品" align="center"></el-table-column>
       <el-table-column prop="productNum" label="数量" align="center"></el-table-column>
       <el-table-column prop="sumPrice" label="总价" align="center"></el-table-column>
+      
+      <!-- change -->
+      <el-table-column
+      label="操作">
+      <template slot-scope="scope">
+        <el-button @click="handleDelete(scope.row.id)" type="danger" size="small">删除</el-button>
+      </template>
+    </el-table-column>
+      <!-- change end-->
+
     </el-table>
     <div class="cart-bar">
       <div class="total-price">合计：{{totalPrice}}</div>
@@ -61,6 +71,11 @@ export default {
         .get(`http://127.0.0.1:7001/api/usercart/${this.userId}`)
         .then(res => {
           console.log("获取购物车列表返回参数", res);
+          //change
+            res.data.data.forEach(item => {
+              console.log('购物车商品的数量：'+item.productNum)
+            })
+
           this.cartList = res.data.data;
         });
     },
@@ -95,7 +110,28 @@ export default {
           }
         });
       });
+    },
+
+    // change
+    handleDelete(actProductId) {
+      this.axios.delete(`http://127.0.0.1:7001/api/cart/${actProductId}`).then(res => {
+                console.log("删除活动商品返回参数", res);
+        if (res && res.data && res.data.code === 0) {
+          this.$message({
+            message: "删除成功",
+            type: "success"
+          });
+          //重新绘制购物车列表
+          this.getCartList();
+        } else {
+          this.$message({
+            message: res.data.message || "网络繁忙",
+            type: "warnning"
+          });
+        }
+      });
     }
+    //change end
   },
   computed: {
     totalPrice() {
