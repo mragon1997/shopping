@@ -6,8 +6,10 @@
       <el-table-column prop="name" label="名称" align="center"></el-table-column>
       <el-table-column prop="brandId" label="品牌ID" align="center"></el-table-column>
       <el-table-column prop="price" label="价格" align="center"></el-table-column>
-      <el-table-column label="操作" align="center">
-        <template slot-scope="scope">
+
+      <!-- change 设置了操作的固定宽度 -->
+      <el-table-column label="操作" align="center" width="320">
+        <template  class="operate" slot-scope="scope">
           <el-button @click="handleUpdateProduct(scope.row.id)">编辑</el-button>
           <el-button @click="handleDetailPic(scope.row.id)">详图管理</el-button>
           <el-button @click="handleDestoryProduct(scope.row.id)" type="danger">删除</el-button>
@@ -137,6 +139,10 @@ export default {
     handleUploadProduct() {
       this.productDialogShow = true;
       this.isUpload = true;
+      
+     //change 上传完商品之后，将信息清空，这样下次就不会出现上次上传的商品信息
+     this.productDialogForm.name = this.productDialogForm.brandId 
+     = this.productDialogForm.price = this.productDialogForm.mainPic = '';
     },
     /**
      * 点击编辑商品按钮

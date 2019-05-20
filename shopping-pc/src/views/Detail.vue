@@ -50,8 +50,17 @@ export default {
     return {
       productId: "", // 商品id
       product: {}, // 商品详情数据
-      productNum: 1
+      productNum: 1,
+
+      //change 获取购物车列表
+      cartList:[],
+      flag:true//判断购物车是否有数据
+
     };
+  },
+  created() {
+    //change 获取购物车列表
+    this.getCartList()
   },
   mounted() {
     console.log("挂载Detail组件");
@@ -62,6 +71,8 @@ export default {
 
     // 获取商品详情
     this.getProductDetail();
+
+    
   },
   methods: {
     /**
@@ -89,31 +100,84 @@ export default {
     minusProductNum() {
       this.productNum--;
     },
+
+    //change 获取购物车列表
+    getCartList() {
+      console.log("获取购物车列表");
+      this.getUserId()
+      this.axios
+        .get(`http://127.0.0.1:7001/api/usercart/${this.userId}`)
+        .then(res => {
+          console.log("获取购物车列表返回参数", res);
+          if(res.data.data.length !== 0){
+          this.cartList = res.data.data;
+          console.log('购物车里有商品'+this.cartList[0].productId)
+          }else{
+            console.log('购物车里mei商品')
+          }
+          
+        });
+    },
     /**
      * 加入购物车
      */
     addCart() {
+      
+      let flag = this.flag
       console.log("加入购物车");
       this.getUserId();
+      this.cartList.forEach( item => {
+        //如果购物车的商品id和详情商品的id相同，则改变数量
+        if( item.productId === this.product.id ){
+          flag = false
+          console.log('aaaa' + flag)
+          this.productNum += item.productNum
+          console.log('aaaaaa')
+          this.axios.put(`http://127.0.0.1:7001/api/cart/${item.id}`, {productNum:this.productNum})
+            .then(res => {
+              //再点一次的时候回拿着老数据相加，所以需要再获取一次购物车的数据
+              this.getCartList()
+            console.log("商品的id", item.productId);
+            if (res.data.code === 0) {
+              this.$message({
+                message: "加入购物车成功",
+                type: "success"
+              });
+              
+            } else {
+              this.$message({
+                message: res.data.message,
+                type: "warning"
+              });
+            }
+          });
+        }
+      })
       let param = {
         userId: this.userId || this.$store.state.userId,
         productId: this.productId || this.$route.params.productId,
         productNum: this.productNum
       };
-      this.axios.post("http://127.0.0.1:7001/api/cart", param).then(res => {
-        console.log("用户加入购物车返回参数", res);
-        if (res.data.code === 0) {
-          this.$message({
-            message: "加入购物车成功",
-            type: "success"
-          });
-        } else {
-          this.$message({
-            message: res.data.message,
-            type: "warning"
+      //如果没有改变flag，那么证明没有进入上面的判断
+        if(flag) {
+          console.log('this.flag = '+ flag)
+          this.axios.post("http://127.0.0.1:7001/api/cart", param).then(res => {
+            console.log("用户加入购物车返回参数", res);
+            if (res.data.code === 0) {
+              //第一次添加商品时，页面不知道购物车是否有改变，所以会一直判断flag不为false
+              this.getCartList()
+              this.$message({
+                message: "加入购物车成功",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.data.message,
+                type: "warning"
+              });
+            }
           });
         }
-      });
     },
     /**
      * 获取用户id
