@@ -2,7 +2,15 @@
   <div class="cart">
     <el-table :data="cartList" style="width: 100%">
       <el-table-column prop="detail.name" label="商品" align="center"></el-table-column>
-      <el-table-column prop="productNum" label="数量" align="center"></el-table-column>
+      <el-table-column prop="productNum" label="数量" align="center">
+
+        <!-- change 按钮改变购物车的数量 同时改变总价格 -->
+        <template slot-scope="scope">
+          <el-input-number v-model="scope.row.productNum" @change="handleChange(scope.row.id,scope.row.productNum)" :min="1" label="描述文字"></el-input-number>
+        </template>
+        <!-- change end -->
+
+      </el-table-column>
       <el-table-column prop="sumPrice" label="总价" align="center"></el-table-column>
       
       <!-- change -->
@@ -28,7 +36,7 @@ export default {
   data() {
     return {
       userId: -1, // 当前登录用户的userId  为-1时表示用户未登录
-      cartList: [] // 购物车列表
+      cartList: [], // 购物车列表
     };
   },
   mounted() {
@@ -130,8 +138,16 @@ export default {
           });
         }
       });
+    },
+    //当中间的数发生改变的时候触发
+    handleChange(id,productNum){
+      this.axios.put(`http://127.0.0.1:7001/api/cart/${id}`,{productNum:productNum})
+       .then(res => {
+         this.getCartList();
+       })
     }
     //change end
+
   },
   computed: {
     totalPrice() {
