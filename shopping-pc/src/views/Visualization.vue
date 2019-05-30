@@ -10,23 +10,23 @@
 
     <div class="chart-bar-group">
       <div class="bar-item">
+        <div class="chart-title">浏览商品统计</div>
         <v-chart :forceFit="true" :height="300" :data="browseData" :scale="barScale">
           <v-tooltip/>
-          <v-axis/>
           <v-bar position="name*count"/>
         </v-chart>
       </div>
       <div class="bar-item">
+        <div class="chart-title">加入购物车统计</div>
         <v-chart :forceFit="true" :height="300" :data="cartData" :scale="barScale">
           <v-tooltip/>
-          <v-axis/>
           <v-bar position="name*count"/>
         </v-chart>
       </div>
       <div class="bar-item">
+        <div class="chart-title">购买统计</div>
         <v-chart :forceFit="true" :height="300" :data="orderData" :scale="barScale">
           <v-tooltip/>
-          <v-axis/>
           <v-bar position="name*count"/>
         </v-chart>
       </div>
@@ -39,8 +39,8 @@ const DataSet = require("@antv/data-set");
 
 const barScale = [
   {
-    dataKey: "sales",
-    tickInterval: 20
+    dataKey: "count",
+    tickInterval: 1
   }
 ];
 

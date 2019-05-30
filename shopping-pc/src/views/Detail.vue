@@ -24,7 +24,28 @@
           </div>
           <div class="operate-btn">
             <el-button type="danger" @click="addCart">加入购物车</el-button>
-            <el-button type="success" @click="goBuy">立即购买</el-button>
+            <!--  -->
+            <el-button type="success" @click="dialogFormVisible = true">立即购买</el-button>
+
+            <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+              <el-form :model="form">
+                <el-form-item label="姓名" :label-width="formLabelWidth">
+                  <el-input v-model="form.name"  auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="电话" :label-width="formLabelWidth">
+                  <el-input v-model="form.tel"  auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="地址" :label-width="formLabelWidth">
+                  <el-input v-model="form.address" auto-complete="off"></el-input>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="goBuy">确 定</el-button>
+              </div>
+            </el-dialog>
+            <!--  -->
+
           </div>
         </div>
       </div>
@@ -54,8 +75,19 @@ export default {
 
       //change 获取购物车列表
       cartList:[],
-      flag:true//判断购物车是否有数据
+      flag:true,//判断购物车是否有数据
 
+      canRun:true,//防抖
+      // 
+
+      dialogFormVisible: false,//窗口默认隐藏
+        form: {//输入框绑定数据
+          name: '',
+          tel:'',
+          address:'',
+        },
+        formLabelWidth: '120px'// 输入框前面的字体所占宽度
+      // 
     };
   },
   created() {
@@ -111,7 +143,7 @@ export default {
           console.log("获取购物车列表返回参数", res);
           if(res.data.data.length !== 0){
           this.cartList = res.data.data;
-          console.log('购物车里有商品'+this.cartList[0].productId)
+          console.log('购物车里有商品'+this.cartList[0].productId+'购物车里的商品'+res.data.data)
           }else{
             console.log('购物车里mei商品')
           }
@@ -122,18 +154,21 @@ export default {
      * 加入购物车
      */
     addCart() {
-      
-      let flag = this.flag
+      if(!this.canRun){
+        return;
+      }
+      var _flag = this.flag
       console.log("加入购物车");
       this.getUserId();
-      this.cartList.forEach( item => {
+        console.log('购物车商品的数量为：'+this.cartList.length)
+        this.cartList.forEach( item => {
         //如果购物车的商品id和详情商品的id相同，则改变数量
         if( item.productId === this.product.id ){
-          flag = false
-          console.log('aaaa' + flag)
-          this.productNum += item.productNum
+          _flag = false
+          console.log('aaaa' + _flag)
+           item.productNum += this.productNum
           console.log('aaaaaa')
-          this.axios.put(`http://127.0.0.1:7001/api/cart/${item.id}`, {productNum:this.productNum})
+          this.axios.put(`http://127.0.0.1:7001/api/cart/${item.id}`, {productNum:item.productNum})
             .then(res => {
               //再点一次的时候回拿着老数据相加，所以需要再获取一次购物车的数据
               this.getCartList()
@@ -159,8 +194,8 @@ export default {
         productNum: this.productNum
       };
       //如果没有改变flag，那么证明没有进入上面的判断
-        if(flag) {
-          console.log('this.flag = '+ flag)
+        if(_flag) {
+          console.log('_flag = '+ _flag)
           this.axios.post("http://127.0.0.1:7001/api/cart", param).then(res => {
             console.log("用户加入购物车返回参数", res);
             if (res.data.code === 0) {
@@ -178,6 +213,10 @@ export default {
             }
           });
         }
+      this.canRun = false;
+      setTimeout(() => {
+        this.canRun = true
+      },2000) 
     },
     /**
      * 获取用户id
@@ -203,18 +242,15 @@ export default {
     /**
      * 购买商品
      */
-    goBuy() {
-      console.log("购买商品");
-      this.$prompt("请输入订单地址", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消"
-      }).then(({ value }) => {
-        this.getUserId();
+    goBuy(){
+      //点击确定后关闭窗口
+      this.dialogFormVisible = false
+      this.getUserId();
         let param = {
           userId: this.userId || this.$store.state.userId,
           productId: this.productId || this.$route.params.productId,
           productNum: this.productNum,
-          address: value
+          address: this.form.address
         };
         console.log('购买商品入参：', param)
         this.axios.post("http://127.0.0.1:7001/api/order", param).then(res => {
@@ -231,8 +267,7 @@ export default {
             });
           }
         });
-      });
-    }
+    },
   }
 };
 </script>
