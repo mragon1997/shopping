@@ -8,7 +8,7 @@
       <div class="info-right">
         <div class="detail-name">{{ product.name }}</div>
         <div class="detail-label">
-          <div class="detail-brand">苹果</div>
+          <div class="detail-brand">{{ product.name | nameFormat}}</div>
           <div class="detail-price">{{ product.price }}</div>
         </div>
         <div class="detail-operate">
@@ -61,6 +61,7 @@
   </div>
 </template>
 <script>
+let _this = {}
 import ProductCard from "@/components/ProductCard.vue";
 export default {
   name: "product",
@@ -68,7 +69,9 @@ export default {
     ProductCard
   },
   data() {
+    _this = this
     return {
+
       productId: "", // 商品id
       product: {}, // 商品详情数据
       productNum: 1,
@@ -86,8 +89,10 @@ export default {
           tel:'',
           address:'',
         },
-        formLabelWidth: '120px'// 输入框前面的字体所占宽度
+        formLabelWidth: '120px',// 输入框前面的字体所占宽度
       // 
+
+      brandList: [], // 品牌列表
     };
   },
   created() {
@@ -104,7 +109,8 @@ export default {
     // 获取商品详情
     this.getProductDetail();
 
-    
+    //获取品牌列表
+    this.getBrandList()
   },
   methods: {
     /**
@@ -268,6 +274,27 @@ export default {
           }
         });
     },
+    /**
+     * 获取品牌列表
+     */
+    getBrandList() {
+      console.log("获取品牌列表")
+      this.axios.get("http://127.0.0.1:7001/api/brand").then(res => {
+        console.log("获取品牌列表返回参数", res)
+        this.brandList = res.data.data
+      })
+    }
+  },
+  //过滤商品名称
+  filters: {
+    nameFormat:(value) => {
+      _this.brandList.forEach((item) => {
+        if(item.id === _this.product.brandId){
+          value = item.brandName
+        }
+      })
+      return value
+    }
   }
 };
 </script>
