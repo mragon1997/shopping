@@ -66,7 +66,6 @@ import ProductCard from "@/components/ProductCard.vue";
 
 import collect from '../util/collect.js'
 
-console.log('asdasdas',collect)
 
 export default {
   name: "product",

@@ -14,9 +14,7 @@ function collect({actionId, logId}){
     }
 
     console.log('采集用户数据入参', param)
-    axios.post("http://127.0.0.1:7001/api/actiondetail", param).then(res => {
-        console.log('采集用户数据回调', res)
-    })
+    axios.post("http://127.0.0.1:7001/api/actiondetail", param)
 
 }
 
