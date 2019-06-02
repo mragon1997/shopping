@@ -14,7 +14,7 @@
       <el-table-column prop="sumPrice" label="总价" align="center"></el-table-column>
       
       <!-- change -->
-      <el-table-column
+      <el-table-column align="center"
       label="操作">
       <template slot-scope="scope">
         <el-button @click="handleDelete(scope.row.id)" type="danger" size="small">删除</el-button>
@@ -26,7 +26,25 @@
     <div class="cart-bar">
       <div class="total-price">合计：{{totalPrice}}</div>
       <div class="cart-pay">
-        <el-button type="success" @click="settlementCart">立即结算</el-button>
+        <el-button type="success" @click="dialogFormVisible = true">立即结算</el-button>
+
+            <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+              <el-form :model="form">
+                <el-form-item label="姓名" :label-width="formLabelWidth">
+                  <el-input v-model="form.name"  auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="电话" :label-width="formLabelWidth">
+                  <el-input v-model="form.tel"  auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="地址" :label-width="formLabelWidth">
+                  <el-input v-model="form.address" auto-complete="off"></el-input>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="settlementCart">确 定</el-button>
+              </div>
+            </el-dialog>
       </div>
     </div>
   </div>
@@ -37,7 +55,18 @@ export default {
     return {
       userId: -1, // 当前登录用户的userId  为-1时表示用户未登录
       cartList: [], // 购物车列表
+
+      dialogFormVisible: false,//窗口默认隐藏
+        form: {//输入框绑定数据
+          name: '',
+          tel:'',
+          address:'',
+        },
+        formLabelWidth: '120px'// 输入框前面的字体所占宽度
     };
+  },
+  created() {
+
   },
   mounted() {
     console.log("挂载Cart组件");
@@ -91,15 +120,12 @@ export default {
      * 结算购物车
      */
     settlementCart() {
-      console.log('结算购物车')
-      this.$prompt("请输入订单地址", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消"
-      }).then(({ value }) => {
+        //点击确定后关闭窗口
+        this.dialogFormVisible = false
         this.getUserId();
         let  userId = this.userId || this.$store.state.userId
         let param = {
-          address: value
+          address: this.form.address
         };
         console.log("结算购物车入参：", param);
         this.axios.post(`http://127.0.0.1:7001/api/settlement/${userId}`, param).then(res => {
@@ -117,7 +143,7 @@ export default {
             });
           }
         });
-      });
+      
     },
 
     // change

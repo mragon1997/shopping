@@ -24,10 +24,11 @@
           @click="pricesFilter(item.sid)" :class="['category-item', {selected: currentPrice == item.sid}]">{{item.min}}-{{item.max}}</div>
           
           <form class="priceForm">
-            <input class="priceText1" v-model="minPrice" type="text">
-            -
-            <input class="priceText2" v-model="maxPrice" type="text">
-            <input class="priceSearch" type="button" value="搜索" @click="showProduct">
+
+            <el-input v-model="minPrice" placeholder="最低价" @focus="fo1"></el-input>
+            ——
+            <el-input v-model="maxPrice" placeholder="最高价" @focus="fo2"></el-input>
+
           </form>
         </div>
       </div>
@@ -40,7 +41,7 @@
 
         <!-- change 添加了按sid展现商品 -->
         <ProductCard
-          v-show="(currentBrand === -1 || currentBrand === product.brandId) && (currentPrice === -1 || currentPrice === product.sid)"
+          v-show="(currentBrand === -1 || currentBrand === product.brandId) && (currentPrice === -1 || currentPrice === product.sid) && (product.price >= minPrice && product.price < maxPrice)"
           :productId="product.id"
           :mainPic="product.mainPic"
           :name="product.name"
@@ -76,9 +77,10 @@ export default {
         {sid:7,min:12000,max:100000}
         ],
         currentPrice:-1,
-      minPrice:'',  //priceText1
-      maxPrice:'',  //priceText2
-      //change end
+        minPrice:'',  
+        maxPrice:100000000,
+        flag:true,//判断是不是第一次获取焦点
+        //change end
       
       currentBrand: -1
     };
@@ -106,7 +108,7 @@ export default {
 
         // change
         res.data.data.forEach(item => {
-          if(item.price > 0 && item.price <500){
+          if(item.price >= 0 && item.price <500){
               item.sid = 1;
           }else if(item.price >= 500 && item.price<1000){
               item.sid = 2;
@@ -162,53 +164,56 @@ export default {
     pricesFilter(brandSid) {
       console.log('价格筛选', brandSid)
       this.currentPrice = brandSid;
+      if(this.currentPrice!=-1){
+        this.minPrice = this.prices[brandSid-1].min
+        this.maxPrice = this.prices[brandSid-1].max
+      }else{
+        this.minPrice = ''
+        this.maxPrice = 100000000
+      }
     },
     /**
      * 按输入价格筛选
      */
-    showProduct(){
-      if(this.minPrice > 0 && this.maxPrice <500){
-              this.currentPrice = 1;
-          }else if(this.minPrice >= 500 && this.maxPrice<1000){
-              this.currentPrice = 2;
-          }else if(this.minPrice >= 1000 && this.maxPrice<1700){
-              this.currentPrice = 3;
-          }else if(this.minPrice >= 1700 && this.maxPrice<2800){
-              this.currentPrice = 4;
-          }else if(this.minPrice >= 2800 && this.maxPrice<4500){
-              this.currentPrice = 5;
-          }else if(this.minPrice >= 4500 && this.maxPrice<12000){
-              this.currentPrice = 6;
-          }else if(this.minPrice >= 12000){
-              this.currentPrice = 7;
-          }
-          this.minPrice = this.maxPrice = '';
+    fo1(){
+      // 当获取焦点的时候，将价格排列置为全部价格
+      this.currentPrice=-1
+    },
+    fo2(){
+      //第一次点击，将输入框置空
+      if(this.flag){
+          this.flag = false
+          this.maxPrice=''
+      }else{
+        // 第二次里面的值为输入的值
+        this.maxPrice=this.maxPrice
+      }
+      // 第二个输入框，当获取焦点时置为空
+      
     }
     // change end
-  }
+  },
 };
 </script>
 
 
-<style scoped>
+<style>
 /* change */
+
 .priceForm{
-  line-height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.priceText1{
-    width: 40px;
-    height: 20px;
-    margin-left: 30px;
-}
-.priceText2{
-      width: 40px;
-      height: 20px;
-      margin-right: 30px;
+
+.priceForm .el-input__inner{
+  margin: 0 10px;
+  width: 55px;
+  height: 30px;
+  padding: 0 5px;
 }
 /* change end */
 
-.product {
-}
 .product-category {
   width: 100%;
   border-top: 1px solid #e7e7e7;

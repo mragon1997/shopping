@@ -59,10 +59,10 @@
         </el-table-column>
       </el-table>
       <el-form :model="productPicAdminForm" class="add-pic-form" :inline="true">
-        <el-form-item label="商品编号：">
+        <el-form-item label="商品详情：">
           <el-input v-model="productPicAdminForm.address"></el-input>
         </el-form-item>
-        <el-button type="primary" @click="handleAddProductPic">添加商品</el-button>
+        <el-button type="primary" @click="handleAddProductPic">添加详图</el-button>
       </el-form>
     </el-dialog>
   </div>
