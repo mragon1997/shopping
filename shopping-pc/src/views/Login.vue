@@ -50,6 +50,9 @@
   </div>
 </template>
 <script>
+
+import collect from '../util/collect.js'
+
 export default {
   data() {
 
@@ -131,6 +134,9 @@ export default {
               message: "登录成功！",
               type: "success"
             });
+
+            console.log('啥快递件', collect)
+            collect({actionId: 1})
           } else {
             this.$message({
               message: res.data.message,

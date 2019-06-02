@@ -56,6 +56,7 @@
 import HelloWorld from "@/components/HelloWorld.vue";
 import ProductCard from "@/components/ProductCard.vue";
 
+
 export default {
   name: "home",
   components: {

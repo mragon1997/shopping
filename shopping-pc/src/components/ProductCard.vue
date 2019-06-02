@@ -13,6 +13,11 @@
 </template>
 
 <script>
+
+import collect from '../util/collect.js'
+
+
+
 export default {
   name: "ProductCard",
   props: {
@@ -32,6 +37,13 @@ export default {
      */
     goToDetail() {
       console.log('点击了去往商详页', this.productId)
+
+      let userId = this.$store.state.userId ? this.$store.state.userId : -1;
+      console.log("当前登录用户的userId：", userId);
+      collect({
+        actionId:2,
+        logId: userId
+      })
       this.$router.push({
         name: 'detail',
         params: {

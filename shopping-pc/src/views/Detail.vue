@@ -63,6 +63,11 @@
 <script>
 let _this = {}
 import ProductCard from "@/components/ProductCard.vue";
+
+import collect from '../util/collect.js'
+
+console.log('asdasdas',collect)
+
 export default {
   name: "product",
   components: {
@@ -203,6 +208,10 @@ export default {
         if(_flag) {
           console.log('_flag = '+ _flag)
           this.axios.post("http://127.0.0.1:7001/api/cart", param).then(res => {
+            collect({
+              actionId: 3,
+              logId: this.productId || this.$route.params.productId,
+            })
             console.log("用户加入购物车返回参数", res);
             if (res.data.code === 0) {
               //第一次添加商品时，页面不知道购物车是否有改变，所以会一直判断flag不为false
@@ -262,6 +271,11 @@ export default {
         this.axios.post("http://127.0.0.1:7001/api/order", param).then(res => {
           console.log("购买商品返回参数", res);
           if (res.data.code === 0) {
+
+            collect({
+              actionId: 4,
+              logId: this.productId || this.$route.params.productId,
+            })
             this.$message({
               message: "下单成功",
               type: "success"
