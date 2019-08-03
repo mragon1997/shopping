@@ -97,7 +97,7 @@ export default {
   },
   created() {
     //change 获取购物车列表
-    this.getCartList()
+    // this.getCartList()
   },
   mounted() {
     console.log("挂载Detail组件");
@@ -140,89 +140,111 @@ export default {
     },
 
     //change 获取购物车列表
-    getCartList() {
-      console.log("获取购物车列表");
-      this.getUserId()
-      this.axios
-        .get(`http://127.0.0.1:7001/api/usercart/${this.userId}`)
-        .then(res => {
-          console.log("获取购物车列表返回参数", res);
-          if(res.data.data.length !== 0){
-          this.cartList = res.data.data;
-          console.log('购物车里有商品'+this.cartList[0].productId+'购物车里的商品'+res.data.data)
-          }else{
-            console.log('购物车里mei商品')
-          }
+    // async getCartList() {
+    //   console.log("获取购物车列表");
+    //   this.getUserId()
+    //   this.axios
+    //     .get(`http://127.0.0.1:7001/api/usercart/${this.userId}`)
+    //     .then(res => {
+    //       console.log("获取购物车列表返回参数", res);
+    //       if(res.data.data.length !== 0){
+    //       this.cartList = res.data.data;
+    //       console.log('购物车里有商品'+this.cartList[0].productId+'购物车里的商品'+res.data.data)
+    //       }else{
+    //         console.log('购物车里mei商品')
+    //       }
           
-        });
-    },
+    //     });
+    // },
     /**
      * 加入购物车
      */
-    addCart() {
-      if(!this.canRun){
-        return;
-      }
-      var _flag = this.flag
-      console.log("加入购物车");
-      this.getUserId();
-        console.log('购物车商品的数量为：'+this.cartList.length)
-        this.cartList.forEach( item => {
-        //如果购物车的商品id和详情商品的id相同，则改变数量
-        if( item.productId === this.product.id ){
-          _flag = false
-          console.log('aaaa' + _flag)
-           item.productNum += this.productNum
-          console.log('aaaaaa')
-          this.axios.put(`http://127.0.0.1:7001/api/cart/${item.id}`, {productNum:item.productNum})
-            .then(res => {
-              //再点一次的时候回拿着老数据相加，所以需要再获取一次购物车的数据
-              this.getCartList()
-            console.log("商品的id", item.productId);
-            if (res.data.code === 0) {
-              this.$message({
-                message: "加入购物车成功",
-                type: "success"
-              });
+    // addCart() {
+    //   if(!this.canRun){
+    //     return;
+    //   }
+    //   var _flag = this.flag
+    //   console.log("加入购物车");
+    //   this.getUserId();
+    //     console.log('购物车商品的数量为：'+this.cartList.length)
+    //     this.cartList.forEach( item => {
+    //     //如果购物车的商品id和详情商品的id相同，则改变数量
+    //     if( item.productId === this.product.id ){
+    //       _flag = false
+    //       console.log('aaaa' + _flag)
+    //        item.productNum += this.productNum
+    //       console.log('aaaaaa')
+    //       this.axios.put(`http://127.0.0.1:7001/api/cart/${item.id}`, {productNum:item.productNum})
+    //         .then(res => {
+    //           //再点一次的时候回拿着老数据相加，所以需要再获取一次购物车的数据
+    //           this.getCartList()
+    //         console.log("商品的id", item.productId);
+    //         if (res.data.code === 0) {
+    //           this.$message({
+    //             message: "加入购物车成功",
+    //             type: "success"
+    //           });
               
-            } else {
-              this.$message({
-                message: res.data.message,
-                type: "warning"
-              });
-            }
-          });
+    //         } else {
+    //           this.$message({
+    //             message: res.data.message,
+    //             type: "warning"
+    //           });
+    //         }
+    //       });
+    //     }
+    //   })
+    //   let param = {
+    //     userId: this.userId || this.$store.state.userId,
+    //     productId: this.productId || this.$route.params.productId,
+    //     productNum: this.productNum
+    //   };
+    //   //如果没有改变flag，那么证明没有进入上面的判断
+    //     if(_flag) {
+    //       console.log('_flag = '+ _flag)
+    //       this.axios.post("http://127.0.0.1:7001/api/cart", param).then(res => {
+    //         console.log("用户加入购物车返回参数", res);
+    //         if (res.data.code === 0) {
+    //           //第一次添加商品时，页面不知道购物车是否有改变，所以会一直判断flag不为false
+    //           this.getCartList()
+    //           this.$message({
+    //             message: "加入购物车成功",
+    //             type: "success"
+    //           });
+    //         } else {
+    //           this.$message({
+    //             message: res.data.message,
+    //             type: "warning"
+    //           });
+    //         }
+    //       });
+    //     }
+    //   this.canRun = false;
+    //   setTimeout(() => {
+    //     this.canRun = true
+    //   },2000) 
+    // },
+    /**
+     *更改后的添加购物车代码，上百行行代码最后只需要十几行代码 */ 
+    async addCart() {
+      let flag = 0
+      let res = await this.axios.get(`http://127.0.0.1:7001/api/usercart/${this.$store.state.userId}`)
+      for(let item of res.data.data) {
+        if(item.productId === this.product.id) {
+          item.productNum += this.productNum
+          await this.axios.put(`http://127.0.0.1:7001/api/cart/${item.id}`, {productNum:item.productNum})
+          flag = 1
+          return
         }
-      })
-      let param = {
-        userId: this.userId || this.$store.state.userId,
-        productId: this.productId || this.$route.params.productId,
-        productNum: this.productNum
-      };
-      //如果没有改变flag，那么证明没有进入上面的判断
-        if(_flag) {
-          console.log('_flag = '+ _flag)
-          this.axios.post("http://127.0.0.1:7001/api/cart", param).then(res => {
-            console.log("用户加入购物车返回参数", res);
-            if (res.data.code === 0) {
-              //第一次添加商品时，页面不知道购物车是否有改变，所以会一直判断flag不为false
-              this.getCartList()
-              this.$message({
-                message: "加入购物车成功",
-                type: "success"
-              });
-            } else {
-              this.$message({
-                message: res.data.message,
-                type: "warning"
-              });
-            }
-          });
+      }
+      if(flag == 0){
+          let param = {
+            userId: this.$store.state.userId,
+            productId: this.productId,
+            productNum: this.productNum
+          };
+      this.axios.post("http://127.0.0.1:7001/api/cart", param)
         }
-      this.canRun = false;
-      setTimeout(() => {
-        this.canRun = true
-      },2000) 
     },
     /**
      * 获取用户id

@@ -20,6 +20,7 @@
         <div class="chart-title">加入购物车统计</div>
         <v-chart :forceFit="true" :height="300" :data="cartData" :scale="barScale">
           <v-tooltip/>
+          <v-axis  />
           <v-bar position="name*count"/>
         </v-chart>
       </div>
@@ -115,6 +116,9 @@ export default {
       console.log("获取用户加车商品");
       this.axios.get("http://localhost:7001/api/useraddcart").then(res => {
         console.log("获取用户加车商品返回参数", res);
+        res.data.data.forEach(item => {
+          item.name = item.name.slice(0,10).concat('...')
+        })
         this.cartData = res.data.data;
       });
     },
@@ -132,7 +136,7 @@ export default {
 };
 </script>
  
-<style scoped>
+<style >
 .chart-title {
   margin-left: 60px;
   margin-bottom: 20px;
